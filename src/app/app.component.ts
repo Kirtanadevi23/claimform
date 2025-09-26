@@ -7,7 +7,7 @@ import { ClaimformComponent } from "./components/claimform/claimform.component";
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ClaimformComponent],
+  imports: [ClaimformComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
