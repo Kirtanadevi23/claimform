@@ -2,11 +2,12 @@ import { CommonModule, NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
+import { ExpenseComponent } from '../expense/expense.component';
 
 @Component({
   selector: 'app-claimform',
   standalone: true,
-  imports: [ClarityModule,CommonModule,FormsModule],
+  imports: [ClarityModule,CommonModule,FormsModule,ExpenseComponent],
   templateUrl: './claimform.component.html',
   styleUrl: './claimform.component.css'
 })
@@ -47,6 +48,11 @@ modalOpen = false;
       alert('Form submitted:\n' + JSON.stringify(this.formData, null, 2));
       this.closeModal(form);
     }
+  }
+  selected:string=''; 
+
+  onClick(click:string){
+    this.selected=click;
   }
 }
 

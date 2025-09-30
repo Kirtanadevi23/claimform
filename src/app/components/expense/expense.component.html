@@ -1,0 +1,108 @@
+ <div class="header1">
+    <h1>Expense reimbursement Page </h1>
+</div>
+ 
+<h3>Expense Page</h3>
+<div *ngIf="personalData ">
+    <p><strong>Date of Submission:</strong> {{ personalData.today }}</p>
+    <p><strong>Expense Statement of:</strong> {{ personalData.username }}</p>
+    <p><strong>Employee Code:</strong> {{ personalData.employeeCode }}</p>
+    <p><strong>Purpose & Place:</strong> {{ personalData.purposePlace }}</p>
+    <p><strong>Company & Plant:</strong> {{ personalData.companyPlant }}</p>
+    <p><strong>Cost Center:</strong> {{ personalData.costCenter }}</p>
+    <p><strong>Vendor Code:</strong> {{ personalData.vendorCode }}</p>
+</div>
+<button class="btn btn-primary" (click)="openmodel()">add</button>
+ 
+<clr-modal [(clrModalOpen)]="formopen" [clrModalSize]="'md'">
+ <div class="modal-body">
+ 
+<form clrForm #epenseForm="ngForm" class="expense-form">
+    <div class="grid-two">
+      <clr-input-container>
+        <label>Date</label>
+        <input clrInput type="date" [(ngModel)]="formData.date" name="date" required />
+      </clr-input-container>
+ 
+      <clr-input-container>
+        <label>Supporting No</label>
+        <input clrInput type="text" [(ngModel)]="formData.supportingNo" name="supportingNo" required />
+      </clr-input-container>
+ 
+     
+    </div>
+<div class="grid-two">
+ <clr-select-container>
+        <label>Particulars</label>
+        <select clrSelect [(ngModel)]="formData.particulars" name="particulars" required>
+          <option value="Hotel">Hotel</option>
+          <option value="Transport">Transport</option>
+          <option value="Food">Food</option>
+          <option value="Allowance">Allowance</option>
+          <option value="Communication">Communication</option>
+          <option value="Visa Process Fees">Visa Process Fees</option>
+          <option value="Others">Others</option>
+        </select>
+      </clr-select-container>
+ 
+      <clr-select-container>
+        <label>Payment Mode</label>
+        <select clrSelect [(ngModel)]="formData.paymentMode" name="paymentMode" required>
+          <option value="Cash">Cash</option>
+        </select>
+      </clr-select-container>
+     
+</div>
+ 
+<div class="divider"></div>
+<clr-input-container class="amount1" >
+      <label>Amount</label>
+      <input clrInput type="number" [(ngModel)]="formData.amount" name="amount" required />
+    </clr-input-container>
+    <clr-textarea-container class="remarks-box">
+  <label>Remarks</label>
+  <textarea clrTextarea [(ngModel)]="formData.remarks" name="remarks"></textarea>
+</clr-textarea-container>
+ 
+ 
+   
+<div class="divider"></div>
+    <div class="actions">
+      <button class="submit-btn" [disabled]="!epenseForm.valid" type="button" (click)="addEntry(epenseForm)"> {{!isEdit? 'add': 'Update'}}</button>
+       <button class="btn-outline-danger" type="reset" >Reset</button>
+    </div>
+  </form>
+ 
+ 
+ </div>
+ 
+</clr-modal>
+ 
+<clr-datagrid *ngIf="entries.length > 0">
+  <clr-dg-column>Sno</clr-dg-column>
+  <clr-dg-column>Date</clr-dg-column>
+  <clr-dg-column>Supporting No</clr-dg-column>
+  <clr-dg-column>Particulars</clr-dg-column>
+  <clr-dg-column>Payment Mode</clr-dg-column>
+  <clr-dg-column>Amount</clr-dg-column>
+  <clr-dg-column>Remarks</clr-dg-column>
+  <clr-dg-column>Screenshot</clr-dg-column>
+ 
+   <clr-dg-column>Actions</clr-dg-column>
+ 
+  <clr-dg-row *ngFor="let entry of entries let i = index">
+     <clr-dg-cell>{{ i }}</clr-dg-cell>
+    <clr-dg-cell>{{ entry.date }}</clr-dg-cell>
+    <clr-dg-cell>{{ entry.supportingNo }}</clr-dg-cell>
+    <clr-dg-cell>{{ entry.particulars }}</clr-dg-cell>
+    <clr-dg-cell>{{ entry.paymentMode }}</clr-dg-cell>
+    <clr-dg-cell>{{ entry.amount }}</clr-dg-cell>
+    <clr-dg-cell>{{ entry.remarks }}</clr-dg-cell>
+    <clr-dg-cell>{{ entry.screenshot }}</clr-dg-cell>
+     <clr-dg-cell>
+        <button (click)="removeentry(i)">-</button>
+        <button (click)="Editentry(entry,i)">EDIT</button>
+     </clr-dg-cell>
+   
+  </clr-dg-row>
+</clr-datagrid>

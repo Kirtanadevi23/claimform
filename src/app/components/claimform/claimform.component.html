@@ -3,9 +3,9 @@
 <!-- Sidebar -->
 <div class="sidebar">
   <ul>
-    <li>Expense</li>
-    <li>International Travel</li>
-    <li>Domestic Travel</li>
+    <li (click)="onClick('expense')">Expense</li>
+    <li (click)="onClick('International_Travel')">International Travel</li>
+    <li (click)="onClick('Domestic_Travel')">Domestic Travel</li>
   </ul>
 </div>
 
@@ -94,3 +94,5 @@
     </form>
   </div>
 </clr-modal>
+
+<app-expense *ngIf="selected ==='expense'">    </app-expense>
