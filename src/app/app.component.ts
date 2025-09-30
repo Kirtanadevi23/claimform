@@ -8,7 +8,7 @@ import { ExpenseComponent } from './components/expense/expense.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ClaimformComponent,],
+  imports: [ClaimformComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
