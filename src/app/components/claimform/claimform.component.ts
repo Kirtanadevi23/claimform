@@ -1,13 +1,13 @@
 import { CommonModule, NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { ClarityModule } from '@clr/angular';
+import { ClarityModule, ClrAccordionModule } from '@clr/angular';
 import { ExpenseComponent } from '../expense/expense.component';
 
 @Component({
   selector: 'app-claimform',
   standalone: true,
-  imports: [ClarityModule,CommonModule,FormsModule,ExpenseComponent],
+  imports: [ClarityModule,CommonModule,FormsModule,ExpenseComponent,ClrAccordionModule],
   templateUrl: './claimform.component.html',
   styleUrl: './claimform.component.css'
 })

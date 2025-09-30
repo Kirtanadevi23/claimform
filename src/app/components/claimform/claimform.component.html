@@ -9,6 +9,22 @@
   </ul>
 </div>
 
+<clr-accordion>
+  <clr-accordion-panel>
+    <clr-accordion-title>Instructions</clr-accordion-title>
+    
+    <clr-accordion-content>
+      <!-- Your content goes here -->
+       <ul>
+    <li (click)="onClick('expense')">Expense</li>
+    <li (click)="onClick('International_Travel')">International Travel</li>
+    <li (click)="onClick('Domestic_Travel')">Domestic Travel</li>
+  </ul>
+    </clr-accordion-content>
+  </clr-accordion-panel>
+</clr-accordion>
+
+
 <!-- Status Table -->
 <clr-datagrid>
   <clr-dg-column>Type</clr-dg-column>
