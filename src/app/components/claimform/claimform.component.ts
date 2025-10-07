@@ -1,21 +1,30 @@
-import { CommonModule, NgFor } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
-import { ExpenseComponent } from '../expense/expense.component';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-claimform',
+  selector: 'app-claim',
   standalone: true,
-  imports: [ClarityModule,CommonModule,FormsModule,ExpenseComponent],
+  imports: [CommonModule, FormsModule, ClarityModule],
   templateUrl: './claimform.component.html',
-  styleUrl: './claimform.component.css'
+  styleUrls: ['./claimform.component.css']
 })
 export class ClaimformComponent {
 
-modalOpen = false;
-  today: string = '';
-  username: string = 'Arun Kumar'; // Placeholder for Windows username
+constructor(private router:Router) {}
+  claims = [
+    { type: 'General Expense', date: '2024-01-15', purpose: 'Office Supplies', amount: '$245.00', status: 'Pending' },
+    { type: 'International Travel', date: '2024-01-10', purpose: 'Business Trip - London', amount: '$2,850.00', status: 'Approved' },
+    { type: 'Domestic Travel', date: '2024-01-08', purpose: 'Client Meeting - Mumbai', amount: '$420.00', status: 'Rejected' }
+  ];
+
+  modalOpen = false;
+  selectedType = '';
+  username = 'Arun Kumar';
+  today = new Date().toISOString().split('T')[0];
+
 
   formData = {
     employeeCode: '',
@@ -25,34 +34,55 @@ modalOpen = false;
     vendorCode: ''
   };
 
-  ngOnInit() {
-    const now = new Date();
-    this.today = now.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    });
-  }
-
-  openModal() {
+  openModal(type: string) {
+    this.selectedType = type;
     this.modalOpen = true;
   }
 
-  closeModal(form: any) {
+  closeModal() {
     this.modalOpen = false;
-    form.resetForm();
+    this.formData = {
+      employeeCode: '',
+      purposePlace: '',
+      companyPlant: '',
+      costCenter: '',
+      vendorCode: ''
+    };
   }
 
-  onNext(form: any) {
-    if (form.valid) {
-      alert('Form submitted:\n' + JSON.stringify(this.formData, null, 2));
-      this.closeModal(form);
-    }
+  submitForm() {
+  this.router.navigate(['/expense']);
+    this.closeModal();
   }
-  selected:string=''; 
 
-  onClick(click:string){
-    this.selected=click;
+  
+  getIconShape(type: string): string {
+  switch (type) {
+    case 'General Expense': return 'wallet';
+    case 'International Travel': return 'globe';
+    case 'Domestic Travel': return 'plane';
+    default: return 'info-circle';
   }
 }
 
+getTypeDescription(type: string): string {
+  switch (type) {
+    case 'General Expense': return 'Office supplies and meals';
+    case 'International Travel': return 'Flights and hotels abroad';
+    case 'Domestic Travel': return 'Local transportation';
+    default: return '';
+  }
+}
+getStatusClass(status: string): string {
+  switch (status) {
+    case 'Approved':
+      return 'badge badge-success';
+    case 'Pending':
+      return 'badge badge-warning';
+    case 'Rejected':
+      return 'badge badge-danger';
+    default:
+      return 'badge badge-info';
+  }
+}
+}
