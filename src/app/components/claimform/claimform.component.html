@@ -1,114 +1,105 @@
-<h2 class="page-title">Expense reimbursement claim form</h2>
-
-<!-- Sidebar -->
-<div class="sidebar">
-  <ul>
-    <li (click)="onClick('expense')">Expense</li>
-    <li (click)="onClick('International_Travel')">International Travel</li>
-    <li (click)="onClick('Domestic_Travel')">Domestic Travel</li>
-  </ul>
-</div>
-
-<clr-accordion>
-  <clr-accordion-panel>
-    <clr-accordion-title>Instructions</clr-accordion-title>
-    
-    <clr-accordion-content>
-      <!-- Your content goes here -->
-       <ul>
-    <li (click)="onClick('expense')">Expense</li>
-    <li (click)="onClick('International_Travel')">International Travel</li>
-    <li (click)="onClick('Domestic_Travel')">Domestic Travel</li>
-  </ul>
-    </clr-accordion-content>
-  </clr-accordion-panel>
-</clr-accordion>
-
-
-<!-- Status Table -->
-<clr-datagrid>
-  <clr-dg-column>Type</clr-dg-column>
-  <clr-dg-column>Created Date</clr-dg-column>
-  <clr-dg-column>Purpose & Place</clr-dg-column>
-  <clr-dg-column>Amount</clr-dg-column>
-  <clr-dg-column>Status</clr-dg-column>
-
-  <clr-dg-row>
-    <clr-dg-cell>Expense</clr-dg-cell>
-    <clr-dg-cell>01-Oct-2025</clr-dg-cell>
-    <clr-dg-cell>Client Visit</clr-dg-cell>
-    <clr-dg-cell>₹12,000</clr-dg-cell>
-    <clr-dg-cell>In progress</clr-dg-cell>
-  </clr-dg-row>
-
-  <clr-dg-row>
-    <clr-dg-cell>International</clr-dg-cell>
-    <clr-dg-cell>15-Sep-2025</clr-dg-cell>
-    <clr-dg-cell>Germany Trip</clr-dg-cell>
-    <clr-dg-cell>₹85,000</clr-dg-cell>
-    <clr-dg-cell>Approved</clr-dg-cell>
-  </clr-dg-row>
-
-  <clr-dg-row>
-    <clr-dg-cell>Domestic</clr-dg-cell>
-    <clr-dg-cell>10-Sep-2025</clr-dg-cell>
-    <clr-dg-cell>Chennai Visit</clr-dg-cell>
-    <clr-dg-cell>₹5,000</clr-dg-cell>
-    <clr-dg-cell>Rejected</clr-dg-cell>
-  </clr-dg-row>
-</clr-datagrid>
-
-<!-- New Claim Button -->
-<button class="btn btn-primary" (click)="openModal()">New Claim</button>
-
-<!-- Modal for Personal Details -->
-<clr-modal [(clrModalOpen)]="modalOpen" [clrModalSize]="'lg'">
-  <h3 class="modal-title">Personal Details</h3>
-  <div class="modal-body">
-    <form #claimForm="ngForm" (ngSubmit)="onNext(claimForm)">
-      <div class="clr-form">
-        <div class="clr-form-control">
-          <label>Date of Submission</label>
-          <input clrInput [value]="today" readonly />
-        </div>
-
-        <div class="clr-form-control">
-          <label>Expense statement of</label>
-          <input clrInput [value]="username" readonly />
-        </div>
-
-        <div class="clr-form-control">
-          <label for="employeeCode">Employee Code</label>
-          <input clrInput id="employeeCode" name="employeeCode" [(ngModel)]="formData.employeeCode" required />
-        </div>
-
-        <div class="clr-form-control">
-          <label for="purposePlace">Purpose & Place</label>
-          <input clrInput id="purposePlace" name="purposePlace" [(ngModel)]="formData.purposePlace" required />
-        </div>
-
-        <div class="clr-form-control">
-          <label for="companyPlant">Company & Plant</label>
-          <input clrInput id="companyPlant" name="companyPlant" [(ngModel)]="formData.companyPlant" required />
-        </div>
-
-        <div class="clr-form-control">
-          <label for="costCenter">Cost Center</label>
-          <input clrInput id="costCenter" name="costCenter" [(ngModel)]="formData.costCenter" required />
-        </div>
-
-        <div class="clr-form-control">
-          <label for="vendorCode">Vendor Code</label>
-          <input clrInput id="vendorCode" name="vendorCode" [(ngModel)]="formData.vendorCode" required />
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-success" [disabled]="!claimForm.form.valid">Next</button>
-        <button type="button" class="btn btn-outline" (click)="closeModal(claimForm)">Cancel</button>
-      </div>
-    </form>
+<div class="container clr-p-4">
+  <!-- Header -->
+  <div class="clr-row clr-border clr-rounded clr-p-4 clr-mb-4">
+    <div class="clr-col-12">
+      <h2 class="text-2xl clr-mb-1">Expense Claim System</h2>
+      <p class="text-muted">Submit and track your expense reimbursements</p>
+    </div>
   </div>
-</clr-modal>
 
-<app-expense *ngIf="selected ==='expense'">    </app-expense>
+  <!-- Recent Claims Table -->
+  <div class="clr-row clr-border clr-rounded clr-p-4 clr-mb-4">
+    <div class="clr-col-12">
+      <h3 class="clr-mb-2">Recent Claims</h3>
+      <clr-datagrid [clrDgLoading]="false">
+        <clr-dg-column>Type</clr-dg-column>
+        <clr-dg-column>Date</clr-dg-column>
+        <clr-dg-column>Purpose</clr-dg-column>
+        <clr-dg-column>Amount</clr-dg-column>
+        <clr-dg-column>Status</clr-dg-column>
+
+        <clr-dg-row *ngFor="let claim of claims">
+          <clr-dg-cell>{{ claim.type }}</clr-dg-cell>
+          <clr-dg-cell>{{ claim.date }}</clr-dg-cell>
+          <clr-dg-cell>{{ claim.purpose }}</clr-dg-cell>
+          <clr-dg-cell>{{ claim.amount }}</clr-dg-cell>
+          <clr-dg-cell>
+           
+<span [ngClass]="getStatusClass(claim.status)" class="status-badge">
+  {{ claim.status }}
+</span>
+
+          </clr-dg-cell>
+        </clr-dg-row>
+      </clr-datagrid>
+    </div>
+  </div>
+
+  <!-- Claim Type Selection -->
+  <div class="clr-row clr-border clr-rounded clr-p-4 clr-mb-4">
+    <div class="clr-col-12">
+      <h3 class="clr-mb-2">Create New Claim</h3>
+      <div class="clr-row clr-gutter clr-justify-content-start">
+        <div class="clr-col-12 clr-col-md-4" *ngFor="let type of ['General Expense', 'International Travel', 'Domestic Travel']">
+          <div class="option-card clr-border clr-rounded clr-p-3 clr-mb-3" (click)="openModal(type)">
+            <div class="text-center">
+              <clr-icon [attr.shape]="getIconShape(type)" class="card-icon clr-mb-2"></clr-icon>
+              <h4 class="clr-mb-1">{{ type }}</h4>
+              <p class="text-muted text-sm">
+                {{ getTypeDescription(type) }}           
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <clr-modal [(clrModalOpen)]="modalOpen">
+    <h3 class="modal-title">Personal Details - {{ selectedType }}</h3>
+    <div class="modal-body">
+      <form #claimForm="ngForm" class="clr-form clr-form-horizontal">
+        <clr-input-container>
+          <label>Date of Submission</label>
+          <input clrInput type="text" [value]="today" readonly />
+        </clr-input-container>
+
+        <clr-input-container>
+          <label>Expense Statement of</label>
+          <input clrInput type="text" [value]="username" readonly />
+        </clr-input-container>
+
+        <clr-input-container>
+          <label>Employee Code</label>
+          <input clrInput type="text" name="employeeCode" [(ngModel)]="formData.employeeCode" required />
+        </clr-input-container>
+
+        <clr-input-container>
+          <label>Purpose & Place</label>
+          <input clrInput type="text" name="purposePlace" [(ngModel)]="formData.purposePlace" required />
+        </clr-input-container>
+
+        <clr-input-container>
+          <label>Company & Plant</label>
+          <input clrInput type="text" name="companyPlant" [(ngModel)]="formData.companyPlant" required />
+        </clr-input-container>
+
+        <clr-input-container>
+          <label>Cost Center</label>
+          <input clrInput type="text" name="costCenter" [(ngModel)]="formData.costCenter" required />
+        </clr-input-container>
+
+        <clr-input-container>
+          <label>Vendor Code</label>
+          <input clrInput type="text" name="vendorCode" [(ngModel)]="formData.vendorCode" required />
+        </clr-input-container>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" [disabled]="!claimForm.valid" (click)=" submitForm()">Continue</button>
+          <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </clr-modal>
+</div>
