@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-expense',
@@ -11,6 +12,7 @@ import { ClarityModule } from '@clr/angular';
   styleUrl: './expense.component.css'
 })
 export class ExpenseComponent {
+  constructor(private router:Router){}
 username: string = '';
   editIndex: number | null = null;
   isEdit:boolean=false;
