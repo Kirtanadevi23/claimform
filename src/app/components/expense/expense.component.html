@@ -1,4 +1,4 @@
- <div class="header1">
+<!-- <div class="header1">
     <h1>Expense reimbursement Page </h1>
 </div>
  
@@ -105,4 +105,103 @@
      </clr-dg-cell>
    
   </clr-dg-row>
-</clr-datagrid>
+</clr-datagrid> -->
+
+
+<!-- src/app/app.component.html -->
+<div class="page">
+  <h2 class="title">General Expense</h2>
+  <button class="btn-primary" (click)="openModal()">+ Add Expense</button>
+  <!-- Popup form -->
+  <div class="overlay" *ngIf="showModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add Expense</h3>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+      <!-- Form fields -->
+      <form #expenseForm="ngForm" (ngSubmit)="addExpense(expenseForm)">
+        <div class="form-row">
+          <label>Date</label>
+          <input type="date" name="date" ngModel required />
+        </div>
+        <div class="form-row">
+          <label>Supporting No</label>
+          <input type="text" name="supportNo" placeholder="e.g. 12345" ngModel required />
+        </div>
+        <div class="form-row">
+          <label>Particulars</label>
+          <select name="particular" ngModel required>
+            <option value="" disabled selected>Select</option>
+            <option>Hotel</option>
+            <option>Transport</option>
+            <option>Food</option>
+            <option>Allowance</option>
+            <option>Communication</option>
+            <option>Visa Process Fees</option>
+            <option>Repairs & Maintenance</option>
+            <option>Others</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Payment Mode</label>
+          <select name="mode" ngModel required>
+            <option value="Cash">Cash</option>
+            <option value="Card">Card</option>
+            <option value="Online">Online</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Amount (INR)</label>
+          <input type="number" name="amount" placeholder="Enter amount" ngModel required />
+        </div>
+        <div class="form-row full">
+          <label>Remarks</label>
+          <textarea name="remarks" placeholder="Optional" rows="2" ngModel></textarea>
+        </div>
+        <div class="form-row full">
+          <label>Screenshot</label>
+          <input type="file" (change)="onFileChange($event)" accept="image/*" />
+          <img *ngIf="preview" [src]="preview" class="preview" />
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary">Add</button>
+          <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Review Table -->
+  <div class="table-container" *ngIf="expenses.length">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Supporting No</th>
+          <th>Particular</th>
+          <th>Payment Mode</th>
+          <th>Amount</th>
+          <th>Remarks</th>
+          <th>Screenshot</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of expenses">
+          <td>{{ e.date }}</td>
+          <td>{{ e.supportNo }}</td>
+          <td>{{ e.particular }}</td>
+          <td>{{ e.mode }}</td>
+          <td>{{ e.amount }}</td>
+          <td>{{ e.remarks }}</td>
+          <td>
+            <img *ngIf="e.preview" [src]="e.preview" class="thumb" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bottom-btns">
+    <button class="btn-primary" (click)="review()">Review</button>
+    <button class="btn-secondary" (click)="cancel()">Cancel</button>
+  </div>
+</div>
