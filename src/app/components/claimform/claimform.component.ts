@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { PersonalserviceService } from '../../personalservice.service';
 
 @Component({
   selector: 'app-claim',
