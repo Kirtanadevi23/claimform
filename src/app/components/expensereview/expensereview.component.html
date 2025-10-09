@@ -1,1 +1,66 @@
-<p>expensereview works!</p>
+  <h2 class="title">Expense Reimbursement</h2>
+  <p class="text-muted">Review and submit your expense details</p>
+  <!-- Personal Details -->
+  <div class="clr-row clr-mb-4 clr-border clr-rounded clr-p-4">
+    <div class="clr-col-12 clr-form clr-form-horizontal">
+      <clr-input-container>
+        <label>Employee Name</label>
+        <input clrInput type="text" [value]="personalData.username" readonly />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Employee Code</label>
+        <input clrInput type="text" [value]="personalData.employeeCode" readonly />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Cost Center</label>
+        <input clrInput type="text" [value]="personalData.costCenter" readonly />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Company & Plant</label>
+        <input clrInput type="text" [value]="personalData.companyPlant" readonly />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Purpose & Place</label>
+        <input clrInput type="text" [value]="personalData.purposePlace" readonly />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Vendor Code</label>
+        <input clrInput type="text" [value]="personalData.vendorCode" readonly />
+      </clr-input-container>
+    </div>
+  </div>
+ 
+ 
+ <clr-datagrid *ngIf="expenses.length > 0">
+    <clr-dg-column>Date</clr-dg-column>
+    <clr-dg-column>Supporting No</clr-dg-column>
+    <clr-dg-column>Particular</clr-dg-column>
+    <clr-dg-column>Payment Mode</clr-dg-column>
+    <clr-dg-column>Amount</clr-dg-column>
+    <clr-dg-column>Remarks</clr-dg-column>
+    <clr-dg-column>Screenshot</clr-dg-column>
+
+    <clr-dg-row *ngFor="let e of expenses">
+      <clr-dg-cell>{{ e.date }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.supportNo }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.particular }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.mode }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.amount }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.remarks }}</clr-dg-cell>
+      <clr-dg-cell>
+        <img *ngIf="e.preview" [src]="e.preview" class="thumb" />
+      </clr-dg-cell>
+    </clr-dg-row>
+  </clr-datagrid>
+
+ 
+<div class="bottom-btns">
+  <button class="btn btn-outline" (click)="printPage()">Print</button>
+  <button class="btn btn-primary" (click)="submitToMain()">Submit</button>
+  <button class="btn btn-outline" (click)="cancelPage()">Cancel</button>
+</div>

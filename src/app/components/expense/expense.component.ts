@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
 import { PersonalserviceService } from '../../personalservice.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-expense',
@@ -18,7 +19,7 @@ personalData:any;
   preview: string | null = null;
   expenses: any[] = [];
   today: string = new Date().toISOString().split('T')[0];
-constructor(private service:PersonalserviceService){}
+constructor(private service:PersonalserviceService,private router:Router){}
 
 ngOnInit(){
 this.personalData=this.service.getDetails();
@@ -53,12 +54,14 @@ console.log(this.personalData);
     };
 
     this.expenses.push(newEntry);
+    this.service.setentries(this.expenses);
     this.closeModal();
     form.resetForm();
   }
 
   review() {
     console.log('Review data:', this.expenses);
+    this.router.navigate(['/expensereview']);
   }
 
   cancel() {
