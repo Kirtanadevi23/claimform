@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { PersonalserviceService } from '../../personalservice.service';
 
 @Component({
   selector: 'app-claim',
@@ -13,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class ClaimformComponent {
 
-constructor(private router:Router) {}
+constructor(private router:Router,private Service:PersonalserviceService) {}
   claims = [
     { type: 'General Expense', date: '2024-01-15', purpose: 'Office Supplies', amount: '$245.00', status: 'Pending' },
     { type: 'International Travel', date: '2024-01-10', purpose: 'Business Trip - London', amount: '$2,850.00', status: 'Approved' },
@@ -22,11 +23,11 @@ constructor(private router:Router) {}
 
   modalOpen = false;
   selectedType = '';
-  username = 'Arun Kumar';
   today = new Date().toISOString().split('T')[0];
 
 
   formData = {
+    username :'',
     employeeCode: '',
     purposePlace: '',
     companyPlant: '',
@@ -42,6 +43,7 @@ constructor(private router:Router) {}
   closeModal() {
     this.modalOpen = false;
     this.formData = {
+      username :'',
       employeeCode: '',
       purposePlace: '',
       companyPlant: '',
@@ -51,6 +53,7 @@ constructor(private router:Router) {}
   }
 
   submitForm() {
+this.Service.setDetails(this.formData);
   this.router.navigate(['/expense']);
     this.closeModal();
   }
