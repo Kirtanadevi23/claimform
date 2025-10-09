@@ -33,7 +33,7 @@ console.log(this.expenses);
   this.router.navigate(['']); // Navigate back to main page
 }
 cancelPage() {
-  this.router.navigate(['']); // Or use location.back() if needed
+  this.router.navigate(['']); 
 }
 }
 
