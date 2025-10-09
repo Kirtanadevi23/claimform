@@ -20,9 +20,9 @@
 
         <clr-dg-row *ngFor="let claim of claims">
           <clr-dg-cell>{{ claim.type }}</clr-dg-cell>
-          <clr-dg-cell>{{ claim.date }}</clr-dg-cell>
-          <clr-dg-cell>{{ claim.purpose }}</clr-dg-cell>
-          <clr-dg-cell>{{ claim.amount }}</clr-dg-cell>
+          <clr-dg-cell>{{ claim.createdDate }}</clr-dg-cell>
+          <clr-dg-cell>{{ claim.purposePlace }}</clr-dg-cell>
+          <clr-dg-cell>{{ claim.totalAmount }}</clr-dg-cell>
           <clr-dg-cell>
            
 <span [ngClass]="getStatusClass(claim.status)" class="status-badge">
@@ -67,7 +67,7 @@
 
         <clr-input-container>
           <label>Expense Statement of</label>
-          <input clrInput type="text" [value]="username" readonly />
+          <input clrInput type="text" [(ngModel)]="formData.username" name="ug" />
         </clr-input-container>
 
         <clr-input-container>

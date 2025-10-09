@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ExpenseComponent } from '../expense/expense.component';
 
 @Component({
   selector: 'app-claim',
@@ -12,22 +11,23 @@ import { ExpenseComponent } from '../expense/expense.component';
   templateUrl: './claimform.component.html',
   styleUrls: ['./claimform.component.css']
 })
-export class ClaimformComponent {
+export class ClaimformComponent implements OnInit {
 
-constructor(private router:Router) {}
-  claims = [
-    { type: 'General Expense', date: '2024-01-15', purpose: 'Office Supplies', amount: '$245.00', status: 'Pending' },
-    { type: 'International Travel', date: '2024-01-10', purpose: 'Business Trip - London', amount: '$2,850.00', status: 'Approved' },
-    { type: 'Domestic Travel', date: '2024-01-08', purpose: 'Client Meeting - Mumbai', amount: '$420.00', status: 'Rejected' }
+constructor(private router:Router,private Service:PersonalserviceService) {}
+  claims:any= [
+    
   ];
-
+ngOnInit(): void {
+  const details = this.Service.getDetails();
+  this.claims = this.Service.getExpense();
+}
   modalOpen = false;
   selectedType = '';
-  username = 'Arun Kumar';
   today = new Date().toISOString().split('T')[0];
 
 
   formData = {
+    username :'',
     employeeCode: '',
     purposePlace: '',
     companyPlant: '',
@@ -43,6 +43,7 @@ constructor(private router:Router) {}
   closeModal() {
     this.modalOpen = false;
     this.formData = {
+      username :'',
       employeeCode: '',
       purposePlace: '',
       companyPlant: '',
@@ -52,6 +53,7 @@ constructor(private router:Router) {}
   }
 
   submitForm() {
+this.Service.setDetails(this.formData);
   this.router.navigate(['/expense']);
     this.closeModal();
   }

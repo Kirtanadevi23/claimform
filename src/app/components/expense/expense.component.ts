@@ -1,108 +1,72 @@
-import { Component } from '@angular/core';
+import { Component, Input,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
+import { PersonalserviceService } from '../../personalservice.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-expense',
   standalone: true,
-  imports: [FormsModule,CommonModule,ClarityModule],
+  imports: [CommonModule, FormsModule, ClarityModule],
   templateUrl: './expense.component.html',
-  styleUrl: './expense.component.css'
+  styleUrls: ['./expense.component.css']
 })
-export class ExpenseComponent {
-  constructor(private router:Router){}
-username: string = '';
-  editIndex: number | null = null;
-  isEdit:boolean=false;
-  formData: any = {
-    date: '',
-    supportingNo: '',
-    particulars: '',
-    paymentMode: 'Cash',
-    amount: null,
-    remarks: '',
-    screenshot: ''
-  };
- 
-  //expenseForm: FormGroup;
- 
-  entries: any[] = [];
- 
-    //     date: ['', Validators.required],
-    //     supportingNo: ['', Validators.required],
-    //     particulars: ['', Validators.required],
-    //     paymentMode: ['', Validators.required],
-    //     amount: ['', [Validators.required, Validators.min(1)]],
-    //     remarks: ['']
-    //   });
-  
-  personalData: any;
-  ngOnInit() {
-    
-  }
- 
-  // onFileChange(event: any) {
-  //     const file = event.target.files[0];
-  //     if (file) {
-  //       this.formData.screenshot = file.name; // You can store base64 if needed
-  //     }
-  //   }
- 
-  addEntry(form: NgForm) {
-    debugger
- 
-    if (form.valid) {
-      if (this.editIndex != null &&this.isEdit) {
- 
-        // Update existing entry
-        this.entries[this.editIndex] = this.formData;
-        this.editIndex = null;
-        this.isEdit=false
- 
-      }
-else{
-  this.entries.push({ ...this.formData });
-     
-     
-    }
-     
-      this.formopen = false
+export class ExpenseComponent implements OnInit {
+personalData:any;
+
+  showModal = false;
+  preview: string | null = null;
+  expenses: any[] = [];
+  today: string = new Date().toISOString().split('T')[0];
+constructor(private service:PersonalserviceService,private router:Router){}
+
+ngOnInit(){
+this.personalData=this.service.getDetails();
+console.log(this.personalData);
 }
-   
+  openModal() {
+    this.showModal = true;
   }
-  removeentry(index: number) {
-    const of=confirm("are you sure")
-    if(of){
-this.entries.splice(index, 1)
+
+  closeModal() {
+    this.showModal = false;
+    this.preview = null;
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.preview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  addExpense(form: NgForm) {
+    if (form.invalid) return;
+
+    const newEntry = {
+      ...form.value,
+      preview: this.preview
+    };
+
+    this.expenses.push(newEntry);
+    this.service.setentries(this.expenses);
+    this.closeModal();
+    form.resetForm();
+  }
+
+  review() {
+    console.log('Review data:', this.expenses);
+    this.router.navigate(['/expensereview']);
+  }
+
+  cancel() {
+    if (confirm('Clear all entries?')) {
+      this.expenses = [];
     }
-   
-  }
-  formopen: boolean = true;
-  openmodel() {
-    debugger
-    this.formopen = true;
-    this.isEdit=false;
-    this.formData = {
-        date: '',
-        supportingNo: '',
-        particulars: '',
-        paymentMode: 'Cash',
-        amount: null,
-        remarks: '',
-        screenshot: ''
-      };
-  }
- 
-  Editentry( entry: any,index: number) {
-    debugger
-    this.formData = ({ ...entry })
-    this.editIndex = index;
-    this.formopen = true
-    this.isEdit=true;
-   console.log("forms",this.formData);
-   
- 
   }
 }
