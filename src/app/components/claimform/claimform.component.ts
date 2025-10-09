@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
 import { CommonModule } from '@angular/common';
@@ -12,15 +12,16 @@ import { PersonalserviceService } from '../../personalservice.service';
   templateUrl: './claimform.component.html',
   styleUrls: ['./claimform.component.css']
 })
-export class ClaimformComponent {
+export class ClaimformComponent implements OnInit {
 
 constructor(private router:Router,private Service:PersonalserviceService) {}
-  claims = [
-    { type: 'General Expense', date: '2024-01-15', purpose: 'Office Supplies', amount: '$245.00', status: 'Pending' },
-    { type: 'International Travel', date: '2024-01-10', purpose: 'Business Trip - London', amount: '$2,850.00', status: 'Approved' },
-    { type: 'Domestic Travel', date: '2024-01-08', purpose: 'Client Meeting - Mumbai', amount: '$420.00', status: 'Rejected' }
+  claims:any= [
+    
   ];
-
+ngOnInit(): void {
+  const details = this.Service.getDetails();
+  this.claims = this.Service.getExpense();
+}
   modalOpen = false;
   selectedType = '';
   today = new Date().toISOString().split('T')[0];

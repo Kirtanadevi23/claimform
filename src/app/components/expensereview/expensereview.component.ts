@@ -27,9 +27,18 @@ console.log(this.expenses);
   printPage() {
     window.print(); 
   }
-
+CalculateTotal(): number {
+    return this.expenses.reduce((total, expense) => total + parseFloat(expense.amount || 0), 0);
+  }
   submitToMain() {
-  this.service.setentries(this.expenses); // Save all entries
+    const expenseData = {
+    type: 'Expense',
+    createdDate: new Date().toISOString(),
+    purposePlace: this.personalData?.purposePlace || '',
+    totalAmount: this.CalculateTotal().toFixed(2),
+    status: 'Pending'
+  };
+    this.service.setExpense(expenseData);
   this.router.navigate(['']); // Navigate back to main page
 }
 cancelPage() {
