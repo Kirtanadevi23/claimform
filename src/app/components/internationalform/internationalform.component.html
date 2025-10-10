@@ -1,1 +1,124 @@
-<p>internationalform works!</p>
+<div class="page">
+  <h2 class="title">International Travel Claim</h2>
+
+  <!-- Currency Selection -->
+  <form>
+    <clr-select-container>
+      <label>Select Currency</label>
+      <select clrSelect [(ngModel)]="selectedCurrency" name="currency">
+        <option value="INR">INR</option>
+        <option value="EUR">EUR</option>
+        <option value="USD">USD</option>
+      </select>
+    </clr-select-container>
+  </form>
+
+  <!-- Card Loaded Form -->
+  <h3 class="clr-mt-4">Card Loaded Amount Details</h3>
+  <form #cardForm="ngForm" >
+    <form>
+      <clr-input-container>
+        <label>INR Rate</label>
+        <input clrInput type="number" [(ngModel)]="card.inrRate" name="cardRate" required />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Total Loaded</label>
+        <input clrInput type="number" [(ngModel)]="card.totalLoaded" name="cardTotal" required />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Loaded Date</label>
+        <input clrInput type="date" [(ngModel)]="card.loadedDate" name="cardDate" required />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Total in INR</label>
+        <input clrInput type="number" [value]="card.inrRate * card.totalLoaded" readonly />
+      </clr-input-container>
+
+      <button class="btn btn-primary clr-mt-2" type="submit" (click)="addCardEntry(cardForm)">Add Card Entry</button>
+    </form>
+  </form>
+
+  <!-- Card Table -->
+  <clr-datagrid *ngIf="cardEntries.length > 0">
+    <clr-dg-column>Currency</clr-dg-column>
+    <clr-dg-column>INR Rate</clr-dg-column>
+    <clr-dg-column>Total Loaded</clr-dg-column>
+    <clr-dg-column>Loaded Date</clr-dg-column>
+    <clr-dg-column>Total in INR</clr-dg-column>
+
+    <clr-dg-row *ngFor="let entry of cardEntries">
+      <clr-dg-cell>{{ entry.currency }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.inrRate }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.totalLoaded }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.loadedDate }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.totalINR }}</clr-dg-cell>
+    </clr-dg-row>
+  </clr-datagrid>
+
+  <!-- Cash Loaded Form -->
+  <h3 class="clr-mt-4">Cash Amount Details</h3>
+  <form #cashForm="ngForm" (ngSubmit)="addCashEntry(cashForm)">
+    <form>
+      <clr-input-container>
+        <label>INR Rate</label>
+        <input clrInput type="number" [(ngModel)]="cash.inrRate" name="cashRate" required />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Total Loaded</label>
+        <input clrInput type="number" [(ngModel)]="cash.totalLoaded" name="cashTotal" required />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Loaded Date</label>
+        <input clrInput type="date" [(ngModel)]="cash.loadedDate" name="cashDate" required />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Total in INR</label>
+        <input clrInput type="number" [value]="cash.inrRate * cash.totalLoaded" readonly />
+      </clr-input-container>
+
+      <button class="btn btn-primary clr-mt-2" type="submit">Add Cash Entry</button>
+    </form>
+  </form>
+
+  <!-- Cash Table -->
+  <clr-datagrid *ngIf="cashEntries.length > 0">
+    <clr-dg-column>Currency</clr-dg-column>
+    <clr-dg-column>INR Rate</clr-dg-column>
+    <clr-dg-column>Total Loaded</clr-dg-column>
+    <clr-dg-column>Loaded Date</clr-dg-column>
+    <clr-dg-column>Total in INR</clr-dg-column>
+
+    <clr-dg-row *ngFor="let entry of cashEntries">
+      <clr-dg-cell>{{ entry.currency }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.inrRate }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.totalLoaded }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.loadedDate }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.totalINR }}</clr-dg-cell>
+    </clr-dg-row>
+  </clr-datagrid>
+
+  <!-- Travel Dates -->
+  <h3 class="clr-mt-4">Travel Dates</h3>
+  <form>
+    <clr-input-container>
+      <label>Travel Start Date & Time</label>
+      <input clrInput type="datetime-local" [(ngModel)]="travelStart" name="startDate" (change)="calculateDays()" />
+    </clr-input-container>
+
+    <clr-input-container>
+      <label>Travel End Date & Time</label>
+      <input clrInput type="datetime-local" [(ngModel)]="travelEnd" name="endDate" (change)="calculateDays()" />
+    </clr-input-container>
+
+    <clr-input-container>
+      <label>Number of Days</label>
+      <input clrInput type="number" [value]="numberOfDays" readonly />
+    </clr-input-container>
+  </form>
+</div>

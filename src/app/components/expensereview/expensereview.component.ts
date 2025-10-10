@@ -1,6 +1,6 @@
 import { Component,OnInit } from '@angular/core';
 import { PersonalserviceService } from '../../personalservice.service';
-import { ClarityIcons } from '@cds/core/icon';
+
 import { ClarityModule } from '@clr/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';

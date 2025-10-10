@@ -55,9 +55,25 @@ ngOnInit(): void {
 
   submitForm() {
 this.Service.setDetails(this.formData);
-  this.router.navigate(['/expense']);
-    this.closeModal();
+
+ switch (this.selectedType) {
+    case 'General Expense':
+      this.router.navigate(['/expense']);
+      break;
+    case 'International Travel':
+      this.router.navigate(['/international']);
+      break;
+    case 'Domestic Travel':
+      this.router.navigate(['/domestic']);
+      break;
+    default:
+      this.router.navigate(['/expense']); // fallback
   }
+
+  this.closeModal();
+}
+
+
 
   
   getIconShape(type: string): string {
