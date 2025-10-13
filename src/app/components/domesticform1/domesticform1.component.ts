@@ -64,7 +64,7 @@ export class Domesticform1Component {
 
   review() {
     console.log('Review data:', this.expenses);
-    this.router.navigate(['/internationalreview']);
+    this.router.navigate(['/domesticreview']);
   }
 
   cancel() {
