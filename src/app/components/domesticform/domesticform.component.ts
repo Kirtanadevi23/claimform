@@ -61,6 +61,6 @@ selectedCurrency = 'EUR';
     }
   }
   proceed(){
-    this.router.navigate(['/internationalform1']);
+    this.router.navigate(['/domesticform1']);
   }
 }

@@ -1,0 +1,130 @@
+<h2 class="title">Domestic Reimbursement</h2>
+  <p class="text-muted">Complete your expense details below</p>
+
+
+<div class="clr-row clr-mb-4 clr-border clr-rounded clr-p-4">
+    <div class="clr-col-12 clr-form clr-form-horizontal">
+      <clr-input-container>
+        <label>Employee Name</label>
+        <input clrInput type="text" [value]="personalData.username" readonly />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Employee Code</label>
+        <input clrInput type="text" [value]="personalData.employeeCode" readonly />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Cost Center</label>
+        <input clrInput type="text" [value]="personalData.costCenter" readonly />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Company & Plant</label>
+        <input clrInput type="text" [value]="personalData.companyPlant" readonly />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Purpose & Place</label>
+        <input clrInput type="text" [value]="personalData.purposePlace" readonly />
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Vendor Code</label>
+        <input clrInput type="text" [value]="personalData.vendorCode" readonly />
+      </clr-input-container>
+    </div>
+  </div>
+
+  <!-- Expense Form Modal -->
+  <button class="btn btn-primary" (click)="openModal()">+ Add Expense</button>
+
+  <clr-modal [(clrModalOpen)]="showModal" [clrModalSize]="'md'">
+    <h3 class="modal-title">Expense Details</h3>
+    <div class="modal-body">
+      <form #expenseForm="ngForm" (ngSubmit)="addExpense(expenseForm)" clrForm>
+        <clr-input-container class ="mandatory">
+          <label>Date </label>
+          <input clrInput type="date" name="date" [max]="today" ngModel required />
+        </clr-input-container>
+
+        <clr-input-container class ="mandatory">
+          <label>Supporting No </label>
+          <input clrInput type="text" name="supportNo" placeholder="e.g., 123456" ngModel required />
+        </clr-input-container>
+
+        <clr-select-container class ="mandatory">
+          <label>Particulars </label>
+          <select clrSelect name="particular" ngModel required>
+            <option value="" disabled selected>Select</option>
+            <option>Hotel</option>
+            <option>Transport</option>
+            <option>Food</option>
+            <option>Allowance</option>
+            <option>Communication</option>
+            <option>Visa Process Fees</option>
+            <option>Repairs & Maintenance</option>
+            <option>Others</option>
+          </select>
+        </clr-select-container>
+
+        <clr-select-container class ="mandatory">
+          <label>Payment Mode </label>
+          <select clrSelect name="mode" ngModel required>
+            <option value="" disabled selected>Select payment mode</option>
+            <option value="Cash">Cash</option>
+            <option value="Card">Card</option>
+            <option value="Online">Itilite</option>
+          </select>
+        </clr-select-container>
+
+        <clr-input-container class ="mandatory">
+          <label>Amount </label>
+          <input clrInput type="number" name="amount" placeholder="0.00" ngModel required />
+        </clr-input-container>
+
+        <clr-textarea-container class ="mandatory">
+          <label>Remarks</label>
+          <textarea clrTextarea name="remarks" placeholder="e.g., Test entry" rows="2" ngModel></textarea>
+        </clr-textarea-container>
+
+        <clr-input-container class ="mandatory">
+          <label>Screenshot</label>
+          <input clrInput type="file" (change)="onFileChange($event)" accept="image/*" />
+          <img *ngIf="preview" [src]="preview" class="preview" />
+        </clr-input-container>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">Add</button>
+          <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </clr-modal>
+
+   <clr-datagrid *ngIf="expenses.length > 0">
+    <clr-dg-column>Date</clr-dg-column>
+    <clr-dg-column>Supporting No</clr-dg-column>
+    <clr-dg-column>Particular</clr-dg-column>
+    <clr-dg-column>Payment Mode</clr-dg-column>
+    <clr-dg-column>Amount</clr-dg-column>
+    <clr-dg-column>Remarks</clr-dg-column>
+    <clr-dg-column>Screenshot</clr-dg-column>
+
+    <clr-dg-row *ngFor="let e of expenses">
+      <clr-dg-cell>{{ e.date }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.supportNo }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.particular }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.mode }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.amount }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.remarks }}</clr-dg-cell>
+      <clr-dg-cell>
+        <img *ngIf="e.preview" [src]="e.preview" class="thumb" />
+      </clr-dg-cell>
+    </clr-dg-row>
+  </clr-datagrid>
+
+  <div class="bottom-btns">
+    <button class="btn btn-primary" (click)="review()">Review</button>
+    <button class="btn btn-outline" (click)="cancel()">Cancel</button>
+  </div>
