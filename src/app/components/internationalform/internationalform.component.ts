@@ -2,17 +2,18 @@ import { NgModule, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-internationalform',
   standalone: true,
-  imports: [CommonModule, FormsModule, ClarityModule],
+  imports: [CommonModule, FormsModule, ClarityModule  ],
   templateUrl: './internationalform.component.html',
   styleUrl: './internationalform.component.css'
 })
 export class InternationalformComponent {
 
-
+constructor(private router: Router) {}
 selectedCurrency = 'EUR';
 
   card = {
@@ -47,6 +48,7 @@ selectedCurrency = 'EUR';
     if (form.valid) {
       const totalINR = this.cash.inrRate * this.cash.totalLoaded;
       this.cashEntries.push({ ...this.cash, currency: this.selectedCurrency, totalINR });
+      console.log(this.cashEntries);
       form.resetForm();
     }
   }
@@ -58,5 +60,8 @@ selectedCurrency = 'EUR';
       const diff = (end - start) / (1000 * 60 * 60 * 24);
       this.numberOfDays = parseFloat(diff.toFixed(2));
     }
+  }
+  proceed(){
+    this.router.navigate(['/internationalform1']);
   }
 }
