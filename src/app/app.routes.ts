@@ -5,6 +5,7 @@ import { ExpensereviewComponent } from './components/expensereview/expensereview
 import { InternationalformComponent } from './components/internationalform/internationalform.component';
 import { Internationalform1Component } from './components/internationalform1/internationalform1.component';
 import { InternationalreviewComponent } from './components/internationalreview/internationalreview.component';
+import { DomesticformComponent } from './components/domesticform/domesticform.component';
 
 export const routes: Routes = [
     {path:'',component:ClaimformComponent},
@@ -12,5 +13,7 @@ export const routes: Routes = [
     {path:'expensereview',component:ExpensereviewComponent},
     {path:'international',component:InternationalformComponent},
     {path:'internationalform1',component:Internationalform1Component},
-    {path:'internationalreview',component:InternationalreviewComponent}
+    {path:'internationalreview',component:InternationalreviewComponent},
+    {path:'domestic',component:DomesticformComponent}
+
 ]
