@@ -64,7 +64,7 @@ export class Internationalform1Component {
 
   review() {
     console.log('Review data:', this.expenses);
-    this.router.navigate(['/internationalform1']);
+    this.router.navigate(['/internationalreview']);
   }
 
   cancel() {
