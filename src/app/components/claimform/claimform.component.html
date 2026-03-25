@@ -1,16 +1,22 @@
+<div>
+  <img src="/assets/wind1.jpg" alt="Background" class="image clr-p-4">
 <div class="container clr-p-4">
+
+
   <!-- Header -->
   <div class="clr-row clr-border clr-rounded clr-p-4 clr-mb-4">
     <div class="clr-col-12">
-      <h2 class="text-2xl clr-mb-1">Expense Claim System</h2>
+      <h2 class="page-title">Expense Claim System</h2>
       <p class="text-muted">Submit and track your expense reimbursements</p>
     </div>
   </div>
 
+
   <!-- Recent Claims Table -->
-  <div class="clr-row clr-border clr-rounded clr-p-4 clr-mb-4">
-    <div class="clr-col-12">
-      <h3 class="clr-mb-2">Recent Claims</h3>
+<div class="clr-row clr-border clr-rounded clr-p-4 clr-mb-4">
+  <div class="clr-col-12">
+    <h3 class="clr-mb-2">Recent Claims</h3>
+    <div class="scrollable-datagrid">
       <clr-datagrid [clrDgLoading]="false">
         <clr-dg-column>Type</clr-dg-column>
         <clr-dg-column>Date</clr-dg-column>
@@ -18,37 +24,41 @@
         <clr-dg-column>Amount</clr-dg-column>
         <clr-dg-column>Status</clr-dg-column>
 
-        <clr-dg-row *ngFor="let claim of claims">
+
+  <clr-dg-row *clrDgItems="let claim of claims">
           <clr-dg-cell>{{ claim.type }}</clr-dg-cell>
           <clr-dg-cell>{{ claim.createdDate }}</clr-dg-cell>
           <clr-dg-cell>{{ claim.purposePlace }}</clr-dg-cell>
-          <clr-dg-cell>{{ claim.totalAmount }}</clr-dg-cell>
+          <clr-dg-cell>₹{{ claim.totalAmount }}</clr-dg-cell>
           <clr-dg-cell>
-           
-<span [ngClass]="getStatusClass(claim.status)" class="status-badge">
-  {{ claim.status }}
-</span>
-
+            <span [ngClass]="getStatusClass(claim.status)" class="status-badge">
+              {{ claim.status }}
+            </span>
           </clr-dg-cell>
         </clr-dg-row>
+
+        <clr-dg-placeholder *ngIf="claims.length === 0">No recent claims!</clr-dg-placeholder>
+.
+        <clr-dg-footer>
+          <clr-dg-pagination #pagination [clrDgPageSize]="10">
+            <clr-dg-page-size [clrPageSizeOptions]="[10, 20, 50, 100]">Users per page</clr-dg-page-size>
+            {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} of {{ pagination.totalItems }} users
+          </clr-dg-pagination>
+        </clr-dg-footer>
       </clr-datagrid>
     </div>
   </div>
-
+</div>
   <!-- Claim Type Selection -->
   <div class="clr-row clr-border clr-rounded clr-p-4 clr-mb-4">
     <div class="clr-col-12">
       <h3 class="clr-mb-2">Create New Claim</h3>
-      <div class="clr-row clr-gutter clr-justify-content-start">
-        <div class="clr-col-12 clr-col-md-4" *ngFor="let type of ['General Expense', 'International Travel', 'Domestic Travel']">
-          <div class="option-card clr-border clr-rounded clr-p-3 clr-mb-3" (click)="openModal(type)">
-            <div class="text-center">
-              <clr-icon [attr.shape]="getIconShape(type)" class="card-icon clr-mb-2"></clr-icon>
-              <h4 class="clr-mb-1">{{ type }}</h4>
-              <p class="text-muted text-sm">
-                {{ getTypeDescription(type) }}           
-              </p>
-            </div>
+      <div class="claim-options">
+        <div class="option-card" *ngFor="let type of ['General Expense', 'International Travel', 'Domestic Travel']" (click)="openModal(type)">
+          <div class="text-center">
+            <clr-icon [attr.shape]="getIconShape(type)" class="card-icon"></clr-icon>
+            <h4 class="clr-mb-1">{{ type }}</h4>
+            <p class="text-muted text-sm">{{ getTypeDescription(type) }}</p>
           </div>
         </div>
       </div>
@@ -66,7 +76,7 @@
         </clr-input-container>
 
         <clr-input-container>
-          <label>Expense Statement of</label>
+          <label>Expense Statement of Mr/Ms  </label>
           <input clrInput type="text" [(ngModel)]="formData.username" name="ug" />
         </clr-input-container>
 
@@ -81,7 +91,7 @@
         </clr-input-container>
 
         <clr-input-container>
-          <label>Company & Plant</label>
+          <label>Company / Plant</label>
           <input clrInput type="text" name="companyPlant" [(ngModel)]="formData.companyPlant" required />
         </clr-input-container>
 
@@ -96,10 +106,18 @@
         </clr-input-container>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" [disabled]="!claimForm.valid" (click)=" submitForm()">Continue</button>
           <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="!claimForm.valid" (click)="submitForm()">Continue</button>
+
         </div>
       </form>
+
+      <clr-alert *ngIf="showAlert" clrAlertType="info" [clrAlertClosable]="true" (clrAlertClosed)="showAlert = false">
+        <clr-alert-item>
+          <span class="alert-text">Form submitted successfully!</span>
+        </clr-alert-item>
+      </clr-alert>
     </div>
   </clr-modal>
+</div>
 </div>

@@ -1,9 +1,13 @@
-import { Component, Input,OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
-import { PersonalserviceService } from '../../personalservice.service';
+import { PersonalserviceService } from '../../services/personalservice.service';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+
+
+
 
 @Component({
   selector: 'app-expense',
@@ -13,44 +17,93 @@ import { Router } from '@angular/router';
   styleUrls: ['./expense.component.css']
 })
 export class ExpenseComponent implements OnInit {
-personalData:any;
+  constructor(private service: PersonalserviceService, private router: Router, private location: Location) {}
 
+  personalData: any;
   showModal = false;
   preview: string | null = null;
+
+  selectedImage: string | null = null; // For popup image
+  showImageModal: boolean = false;
   expenses: any[] = [];
   today: string = new Date().toISOString().split('T')[0];
-constructor(private service:PersonalserviceService,private router:Router){}
 
-ngOnInit(){
-this.personalData=this.service.getDetails();
-console.log(this.personalData);
-}
+  // Accordion toggles
+  showPersonal: boolean = true;
+  showExpenses = true;
+
+
+  fileName: string | null = null;
+
+
+
+
+  ngOnInit() {
+    this.personalData = this.service.getDetails();
+  }
+
   openModal() {
     this.showModal = true;
   }
 
-  closeModal() {
-    this.showModal = false;
-    this.preview = null;
-  }
+  // closeModal() {
+  //   this.showModal = false;
+  //   // this.preview = null;
+  // }
+
+  // onFileChange(event: any) {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+  //   this.fileName = file.name;
+
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     this.preview = reader.result as string;
+  //   };
+  //   reader.readAsDataURL(file);
+  // }
+
 
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.preview = reader.result as string;
-    };
-    reader.readAsDataURL(file);
+    this.fileName = file.name; // ✅ Capture only file name
   }
+
+  openImageModal(image: string) {
+    this.selectedImage = image;
+
+    this.showImageModal = true; // ✅ Open modal
+
+  }
+  closeImageModal() {
+    this.selectedImage = null;
+
+    this.showImageModal = false; // ✅ Close modal
+
+  }
+
+closeModal(expenseForm?: NgForm) {
+  this.showModal = false;
+  if (expenseForm) {
+    expenseForm.resetForm(); // ✅ Clears Angular form state
+  }
+}
+
+resetForm(){
+  this.fileName = null; 
+  this.preview = null;  
+}
 
   addExpense(form: NgForm) {
     if (form.invalid) return;
 
     const newEntry = {
       ...form.value,
-      preview: this.preview
+      filename: this.fileName, 
+      preview: this.preview 
+
     };
 
     this.expenses.push(newEntry);
@@ -59,8 +112,8 @@ console.log(this.personalData);
     form.resetForm();
   }
 
+
   review() {
-    console.log('Review data:', this.expenses);
     this.router.navigate(['/expensereview']);
   }
 
@@ -69,4 +122,11 @@ console.log(this.personalData);
       this.expenses = [];
     }
   }
+  
+
+  goBack(): void {
+    // this.location.back(); // ✅ Navigates to previous page
+    this.router.navigate(['']);
+  }
 }
+

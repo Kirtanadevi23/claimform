@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClarityModule } from '@clr/angular';
-import { PersonalserviceService } from '../../personalservice.service';
+import { PersonalserviceService } from '../../services/personalservice.service';
 import { Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-internationalform1',
@@ -18,8 +20,18 @@ export class Internationalform1Component {
   preview: string | null = null;
   showModal = false;
   today: string = new Date().toISOString().split('T')[0];
+selectedImage: string | null = null; // For popup image
+  showImageModal: boolean = false;
+  
+  // Accordion toggles
+  showPersonal: boolean = true;
+  showExpenses = true;
 
-  constructor(private service: PersonalserviceService, private router: Router) { }
+
+  fileName: string | null = null;
+
+
+  constructor(private service: PersonalserviceService, private router: Router,private location: Location) { }
 
   ngOnInit() {
     this.personalData = this.service.getDetails();
@@ -37,23 +49,60 @@ export class Internationalform1Component {
     this.preview = null;
   }
 
+  // onFileChange(event: any) {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     this.preview = reader.result as string;
+  //   };
+  //   reader.readAsDataURL(file);
+  // }
+  
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.preview = reader.result as string;
-    };
-    reader.readAsDataURL(file);
+    this.fileName = file.name; 
   }
 
-  addExpense(form: NgForm) {
+  openImageModal(image: string) {
+    this.selectedImage = image;
+
+    this.showImageModal = true; 
+
+  }
+  closeImageModal() {
+    this.selectedImage = null;
+
+    this.showImageModal = false; 
+
+  }
+
+
+  // addExpense(form: NgForm) {
+  //   if (form.invalid) return;
+
+  //   const newEntry = {
+  //     ...form.value,
+  //     preview: this.preview
+  //   };
+
+  //   this.expenses.push(newEntry);
+  //   this.service.setentries(this.expenses);
+  //   this.closeModal();
+  //   form.resetForm();
+  // }
+
+   addExpense(form: NgForm) {
     if (form.invalid) return;
 
     const newEntry = {
       ...form.value,
-      preview: this.preview
+      filename: this.fileName, 
+      preview: this.preview 
+
     };
 
     this.expenses.push(newEntry);
@@ -61,6 +110,7 @@ export class Internationalform1Component {
     this.closeModal();
     form.resetForm();
   }
+
 
   review() {
     console.log('Review data:', this.expenses);
@@ -71,6 +121,10 @@ export class Internationalform1Component {
     if (confirm('Clear all entries?')) {
       this.expenses = [];
     }
+  }
+      goBack(): void {
+    // this.location.back(); // ✅ Navigates to previous page
+    this.router.navigate(['/internationalform']);
   }
 }
   

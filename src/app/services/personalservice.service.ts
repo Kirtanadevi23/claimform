@@ -34,7 +34,17 @@ getExpense(){
   return this.expense
 }
  
-}
- 
-  
+clearData(){
 
+  this.entries=[];
+
+
+}
+ setTotalAllowance(amount:any){
+  this.details.totalAllowance=amount;
+ }
+  getTotalAllowance(){
+    return this.details.totalAllowance;
+  }
+  
+}

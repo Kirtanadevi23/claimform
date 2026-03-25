@@ -1,42 +1,58 @@
-  <h2 class="title">Domestic Reimbursement</h2>
-  <p class="text-muted">Review and submit your expense details</p>
-  <!-- Personal Details -->
-  <div class="clr-row clr-mb-4 clr-border clr-rounded clr-p-4">
-    <div class="clr-col-12 clr-form clr-form-horizontal">
-      <clr-input-container>
-        <label>Employee Name</label>
-        <input clrInput type="text" [value]="personalData.username" readonly />
-      </clr-input-container>
+<div class="page">
+  <div class="image-title-container">
+    <img src="assets\Logo.png" alt="Brand Logo" class="brand-logo">
+    <h2 class="title">Domestic Reimbursement</h2>
+  </div>
+  <!-- personal details -->
+  <div class="info-card">
+    <div class="info-card-header">
+      <h3>Personal Details</h3>
+    </div>
+    <div class="info-card-body">
+      <div class="clr-row clr-form clr-form-horizontal">
+        <!-- Row 1 -->
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Employee Name : </label>
+            <input clrInput type="text" [value]="personalData.username" readonly />
+          </clr-input-container>
+        </div>
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Employee Code : </label>
+            <input clrInput type="text" [value]="personalData.employeeCode" readonly />
+          </clr-input-container>
+        </div>
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Cost Center : </label>
+            <input clrInput type="text" [value]="personalData.costCenter" readonly />
+          </clr-input-container>
+        </div>
 
-      <clr-input-container>
-        <label>Employee Code</label>
-        <input clrInput type="text" [value]="personalData.employeeCode" readonly />
-      </clr-input-container>
-
-      <clr-input-container>
-        <label>Cost Center</label>
-        <input clrInput type="text" [value]="personalData.costCenter" readonly />
-      </clr-input-container>
-
-      <clr-input-container>
-        <label>Company & Plant</label>
-        <input clrInput type="text" [value]="personalData.companyPlant" readonly />
-      </clr-input-container>
-
-      <clr-input-container>
-        <label>Purpose & Place</label>
-        <input clrInput type="text" [value]="personalData.purposePlace" readonly />
-      </clr-input-container>
-
-      <clr-input-container>
-        <label>Vendor Code</label>
-        <input clrInput type="text" [value]="personalData.vendorCode" readonly />
-      </clr-input-container>
+        <!-- Row 2 -->
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Company & Plant : </label>
+            <input clrInput type="text" [value]="personalData.companyPlant" readonly />
+          </clr-input-container>
+        </div>
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Purpose & Place : </label>
+            <input clrInput type="text" [value]="personalData.purposePlace" readonly />
+          </clr-input-container>
+        </div>
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Vendor Code : </label>
+            <input clrInput type="text" [value]="personalData.vendorCode" readonly />
+          </clr-input-container>
+        </div>
+      </div>
     </div>
   </div>
- 
- 
- <clr-datagrid *ngIf="expenses.length > 0">
+  <clr-datagrid *ngIf="expenses.length > 0">
     <clr-dg-column>Date</clr-dg-column>
     <clr-dg-column>Supporting No</clr-dg-column>
     <clr-dg-column>Particular</clr-dg-column>
@@ -56,11 +72,72 @@
         <img *ngIf="e.preview" [src]="e.preview" class="thumb" />
       </clr-dg-cell>
     </clr-dg-row>
+    <!-- tot rows -->
+    <clr-dg-row *ngFor="let total of getTotalsByPaymentMode()">
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell><strong>Total for {{ total.mode }}</strong></clr-dg-cell>
+      <clr-dg-cell><strong> ₹{{ total.total }}</strong></clr-dg-cell>
+
+      <!-- <clr-dg-cell colspan="2"></clr-dg-cell> -->
+    </clr-dg-row>
+
+    <clr-dg-row>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+
+      <clr-dg-cell><strong>Grand Total</strong></clr-dg-cell>
+      <clr-dg-cell><strong>₹{{ totalAmounts }}</strong></clr-dg-cell>
+      <!-- <clr-dg-cell colspan="2"></clr-dg-cell> -->
+    </clr-dg-row>
   </clr-datagrid>
 
- 
-<div class="bottom-btns">
-  <button class="btn btn-outline" (click)="printPage()">Print</button>
-  <button class="btn btn-primary" (click)="submitToMain()">Submit</button>
-  <button class="btn btn-outline" (click)="cancelPage()">Cancel</button>
+
+
+
+  <div class="clr-row1">
+    <div class="clr-col-12 clr-col-md-4">
+      <div class="summary-box">
+        <table class="table table-compact">
+          <tbody>
+
+            <tr>
+              <td>Expense Paid by Employee</td>
+              <td>₹{{ getTotalByMode('Cash') }}</td>
+            </tr>
+            <tr>
+              <td>Expense Paid by Company</td>
+              <td>₹{{ getTotalByMode('Card') }}</td>
+            </tr>
+            <tr>
+              <td>Total Expenses Bill</td>
+              <td>₹{{ totalAmounts }}</td>
+            </tr>
+            <tr>
+              <td>Advance </td>
+              <td>₹{{ advance }}</td>
+            </tr>
+            <tr class="highlight">
+              <td colspan="2" [ngStyle]="{
+    color: getSettlementDetails().type === 'recover' ? 'red' : 'green'
+  }">
+                {{ getSettlementDetails().message }}: ₹{{ getSettlementDetails().amount }}
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-btns">
+    <button class="btn btn-outline" (click)="printPage()">Print</button>
+    <button class="btn btn-primary" (click)="submitToMain()">Submit</button>
+    <button class="btn btn-outline" (click)="cancelPage()">Cancel</button>
+  </div>
 </div>

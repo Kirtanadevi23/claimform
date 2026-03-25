@@ -8,16 +8,18 @@ import { InternationalreviewComponent } from './components/internationalreview/i
 import { DomesticformComponent } from './components/domesticform/domesticform.component';
 import { Domesticform1Component } from './components/domesticform1/domesticform1.component';
 import { DomesticreviewComponent } from './components/domesticreview/domesticreview.component';
+import { LoginpageComponent } from './components/loginpage/loginpage.component';
 
 export const routes: Routes = [
-    {path:'',component:ClaimformComponent},
-    {path:'expense',component:ExpenseComponent},
-    {path:'expensereview',component:ExpensereviewComponent},
-    {path:'international',component:InternationalformComponent},
-    {path:'internationalform1',component:Internationalform1Component},
-    {path:'internationalreview',component:InternationalreviewComponent},
-    {path:'domestic',component:DomesticformComponent},
-    {path:'domesticform1',component:Domesticform1Component},
-    {path:'domesticreview',component:DomesticreviewComponent}
-
-]
+ { path: '', redirectTo: 'login', pathMatch: 'full' },  
+ { path: 'login', component: LoginpageComponent },
+ { path: 'home', component: ClaimformComponent },
+ { path: 'expense', component: ExpenseComponent },
+ { path: 'expensereview', component: ExpensereviewComponent },
+ { path: 'international', component: InternationalformComponent },
+ { path: 'internationalform1', component: Internationalform1Component },
+ { path: 'internationalreview', component: InternationalreviewComponent },
+ { path: 'domestic', component: DomesticformComponent },
+ { path: 'domesticform1', component: Domesticform1Component },
+ { path: 'domesticreview', component: DomesticreviewComponent }
+];
