@@ -1,0 +1,89 @@
+.login-wrapper {
+ position: relative;
+ width: 100vw;
+ height: 100vh;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ overflow: hidden;
+}
+/* Background */
+.bg-image {
+ position: absolute;
+ width: 100%;
+ height: 100%;
+ background: url('/assets/wind1.jpg') no-repeat center center/cover;
+ filter: blur(6px);
+ transform: scale(1.05);
+}
+/* Overlay */
+.bg-overlay {
+ position: absolute;
+ width: 100%;
+ height: 100%;
+ background: rgba(0, 40, 80, 0.6);
+}
+/* Card */
+.login-container {
+ position: relative;
+ z-index: 2;
+ width: 100%;
+ max-width: 400px;
+}
+.login-card {
+ background: white;
+ padding: 30px;
+ border-radius: 12px;
+ box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+/* Header */
+.login-header {
+ text-align: center;
+ margin-bottom: 20px;
+}
+.brand-logo {
+ margin-bottom: 10px;
+}
+.login-title {
+ margin: 0;
+ color: #2a5bd7;
+}
+.login-subtitle {
+ font-size: 13px;
+ color: #666;
+}
+/* Form */
+.form-group {
+ margin-bottom: 15px;
+}
+.form-group label {
+ font-size: 14px;
+ display: block;
+ margin-bottom: 5px;
+}
+.form-group input {
+ width: 100%;
+ padding: 10px;
+ border-radius: 6px;
+ border: 1px solid #ccc;
+}
+/* Error */
+.error {
+ color: red;
+ font-size: 12px;
+ margin-top: 5px;
+}
+/* Button */
+.login-btn {
+ width: 100%;
+ padding: 10px;
+ background: #2a5bd7;
+ color: white;
+ border: none;
+ border-radius: 6px;
+ margin-top: 10px;
+}
+.login-btn:hover {
+ background: #1f47a8;
+ cursor: pointer;
+}

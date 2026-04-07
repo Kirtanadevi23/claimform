@@ -1,1 +1,27 @@
-<p>header works!</p>
+<!-- <div class="header-container">
+  <div class="app-title">
+    <strong>Reimbursement App</strong>
+  </div>
+
+  <div class="user-area">
+    <span class="username">Welcome, {{ username }}</span>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div> -->
+<!-- </div> -->
+<div class="header-container">
+  <div class="app-title">
+    <strong>Reimbursement App</strong>
+  </div>
+
+
+<clr-dropdown class="user-area" >
+  
+          <button class="username" class="btn btn-link btn-sm" clrDropdownTrigger>
+            Welcome, {{ username }}
+            <cds-icon shape="angle" direction="down"></cds-icon>
+          </button>
+          
+          <clr-dropdown-menu clrPosition="bottom-right" *clrIfOpen>
+<button clrDropdownItem (click)="logout()">Logout</button>
+</clr-dropdown-menu>
+        </clr-dropdown>

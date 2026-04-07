@@ -1,0 +1,41 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 20px;
+  background: transparent;
+  border-bottom: 1px solid #a8d9ef;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.app-title strong {
+  font-size: 1.5rem;
+  color: #d4e8f2;
+  padding-left: 50px;
+  font-weight: 700;}
+
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.username {
+  color: #d4e8f2;
+  font-weight: 600;
+  font-size: large;
+}
+
+.logout-btn {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.logout-btn:hover {
+  background: #e05656;
+}
