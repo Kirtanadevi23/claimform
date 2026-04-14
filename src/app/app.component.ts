@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ClarityModule } from '@clr/angular';
-import { ClaimformComponent } from "./components/claimform/claimform.component";
-import { ExpenseComponent } from './components/expense/expense.component';
-
 
 @Component({
   selector: 'app-root',
@@ -15,7 +11,3 @@ import { ExpenseComponent } from './components/expense/expense.component';
 export class AppComponent {
   title = 'claimform';
 }
-
-
-
-    

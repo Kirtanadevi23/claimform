@@ -1,0 +1,105 @@
+<div class="page">
+  <!-- HEADER -->
+  <div class="image-title-container">
+    <img src="assets/Logo.png" alt="Brand Logo" class="brand-logo">
+    <h2 class="title">Expense Reimbursement Review</h2>
+  </div>
+
+  <!-- standardized personal details from other review components -->
+  <div class="info-card">
+    <div class="info-card-header">
+      <h3>Personal Details</h3>
+    </div>
+    <div class="info-card-body">
+      <div class="clr-row clr-form clr-form-horizontal">
+        <!-- Row 1 -->
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Employee Name : </label>
+            <input clrInput type="text" [value]="claimData?.name" readonly />
+          </clr-input-container>
+        </div>
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Employee Code : </label>
+            <input clrInput type="text" [value]="claimData?.employeeCode" readonly />
+          </clr-input-container>
+        </div>
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Cost Center : </label>
+            <input clrInput type="text" [value]="claimData?.costCenter" readonly />
+          </clr-input-container>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Company & Plant : </label>
+            <input clrInput type="text" [value]="claimData?.companyPlant" readonly />
+          </clr-input-container>
+        </div>
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Purpose & Place : </label>
+            <input clrInput type="text" [value]="claimData?.purposePlace" readonly />
+          </clr-input-container>
+        </div>
+        <div class="clr-col-4">
+          <clr-input-container>
+            <label>Vendor Code : </label>
+            <input clrInput type="text" [value]="claimData?.vendorCode" readonly />
+          </clr-input-container>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPENSE TABLE WITH TOTALS -->
+  <clr-datagrid *ngIf="expenses.length > 0">
+    <clr-dg-column>Date</clr-dg-column>
+    <clr-dg-column>Supporting No</clr-dg-column>
+    <clr-dg-column>Particular</clr-dg-column>
+    <clr-dg-column>Payment Mode</clr-dg-column>
+    <clr-dg-column>Amount</clr-dg-column>
+    <clr-dg-column>Remarks</clr-dg-column>
+
+    <clr-dg-row *ngFor="let e of expenses">
+      <clr-dg-cell>{{ formatDate(e.date) }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.supportingNo }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.particulars }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.paymentMode }}</clr-dg-cell>
+      <clr-dg-cell>₹{{ e.amount }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.remarks }}</clr-dg-cell>
+    </clr-dg-row>
+
+    <!-- Payment Mode Totals -->
+    <clr-dg-row *ngFor="let total of getTotalsByPaymentMode()">
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell><strong>Total for {{ total.mode }}</strong></clr-dg-cell>
+      <clr-dg-cell><strong> ₹{{ total.total }}</strong></clr-dg-cell>
+    </clr-dg-row>
+
+    <!-- Grand Total -->
+    <clr-dg-row>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell></clr-dg-cell>
+      <clr-dg-cell><strong>Grand Total</strong></clr-dg-cell>
+      <clr-dg-cell><strong>₹{{ totalAmount }}</strong></clr-dg-cell>
+    </clr-dg-row>
+
+    <clr-dg-placeholder *ngIf="expenses.length === 0">No expenses added yet!</clr-dg-placeholder>
+  </clr-datagrid>
+
+  <!-- BUTTONS -->
+  <div class="bottom-btns">
+    <button class="btn btn-outline" (click)="printPage()">Print</button>
+    <button class="btn btn-primary" (click)="submitToMain()">Submit</button>
+    <button class="btn btn-outline" (click)="cancelPage()">Cancel</button>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+<app-app-header></app-app-header>
+<div>
+  <img src="/assets/wind1.jpg" alt="Background" class="image clr-p-4">
+  <div class="container clr-p-4">
+    <!-- Header -->
+    <div class="clr-row clr-border clr-rounded clr-p-4 clr-mb-4">
+      <div class="clr-col-12">
+        <h2 class="page-title">Expense Claim System</h2>
+      </div>
+    </div>
+    <!-- Recent Claims Table -->
+    <div class="clr-row clr-border clr-rounded clr-p-4 clr-mb-4">
+      <div class="clr-col-12">
+        <h3 class="clr-mb-2">Recent Claims</h3>
+        <div class="scrollable-datagrid">
+          <clr-datagrid>
+            <clr-dg-column>Type</clr-dg-column>
+            <clr-dg-column>Date</clr-dg-column>
+            <clr-dg-column>Purpose</clr-dg-column>
+            <clr-dg-column>Amount</clr-dg-column>
+            <clr-dg-column>Status</clr-dg-column>
+            <clr-dg-row *clrDgItems="let claim of claims">
+              <clr-dg-cell>{{ claim.type }}</clr-dg-cell>
+              <clr-dg-cell>{{ claim.date | date: 'MM/dd/yyyy' }}</clr-dg-cell>
+              <clr-dg-cell>{{ claim.purpose }}</clr-dg-cell>
+              <clr-dg-cell>₹{{ claim.totalAmount }}</clr-dg-cell>
+              <clr-dg-cell>
+                <span [ngClass]="getStatusClass(claim.status)" class="status-badge">
+                  {{ claim.status }}
+                </span>
+              </clr-dg-cell>
+            </clr-dg-row>
+            <clr-dg-placeholder *ngIf="claims.length === 0">
+              No recent claims!
+            </clr-dg-placeholder>
+            <clr-dg-footer>
+              <clr-dg-pagination #pagination [clrDgPageSize]="10">
+                <clr-dg-page-size [clrPageSizeOptions]="[10, 20, 50, 100]">
+                  Claims per page
+                </clr-dg-page-size>
+                {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }}
+                of {{ pagination.totalItems }} Claims
+              </clr-dg-pagination>
+            </clr-dg-footer>
+          </clr-datagrid>
+        </div>
+      </div>
+    </div>
+    <!-- Claim Type Selection -->
+    <div class="clr-row clr-border clr-rounded  clr-mb-4">
+      <div class="clr-col-12">
+        <h3 class="clr-mb-2">Create New Claim</h3>
+        <div class="claim-options">
+          <button class="option-card"
+            *ngFor="let type of ['General Expense', 'International Travel', 'Domestic Travel']"
+            (click)="openModal(type)">
+            <div class="text-center">
+              <h4 class="option-title">{{ type }}</h4>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <clr-modal [(clrModalOpen)]="modalOpen">
+      <h3 class="modal-title">Personal Details - {{ selectedType }}</h3>
+      <div class="modal-body">
+        <!--  REACTIVE FORM -->
+        <form [formGroup]="claimForm" class="clr-form clr-form-horizontal">
+          <!-- Date -->
+          <clr-input-container>
+            <label>Date of Submission</label>
+            <input clrInput type="text" [value]="today | date: 'MM/dd/yyyy'" readonly />
+          </clr-input-container>
+          <!-- Username -->
+          <clr-input-container>
+            <label>Expense Statement of Mr/Ms</label>
+            <input clrInput type="text" formControlName="username" />
+          </clr-input-container>
+          <!-- Employee Code -->
+          <clr-input-container>
+            <label>Employee Code</label>
+            <input clrInput type="text" formControlName="employeeCode" />
+          </clr-input-container>
+          <!-- Purpose -->
+          <clr-input-container>
+            <label>Purpose & Place</label>
+            <input clrInput type="text" formControlName="purposePlace" />
+          </clr-input-container>
+          <!-- Company -->
+          <clr-input-container>
+            <label>Company / Plant</label>
+            <input clrInput type="text" formControlName="companyPlant" />
+          </clr-input-container>
+          <!-- Cost Center -->
+          <clr-input-container>
+            <label>Cost Center</label>
+            <input clrInput type="text" formControlName="costCenter" />
+          </clr-input-container>
+          <!-- Vendor Code -->
+          <clr-input-container>
+            <label>Vendor Code</label>
+            <input clrInput type="text" formControlName="vendorCode" />
+          </clr-input-container>
+          <!-- Buttons -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="closeModal()">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="claimForm.invalid" (click)="submitForm()">
+              Continue
+            </button>
+          </div>
+        </form>
+        <!-- REACTIVE FORM END -->
+        <!-- Alert -->
+        <clr-alert *ngIf="showAlert" clrAlertType="info" [clrAlertClosable]="true" (clrAlertClosed)="showAlert = false">
+          <clr-alert-item>
+            <span class="alert-text">Form submitted successfully!</span>
+          </clr-alert-item>
+        </clr-alert>
+      </div>
+    </clr-modal>
+  </div>
+</div>

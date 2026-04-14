@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 
 export class ClaimService {
   private baseUrl = 'https://localhost:7223/api/Claim';
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
   getClaims(employeeId: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/employee/${employeeId}`);
   }
@@ -18,5 +18,10 @@ export class ClaimService {
   createClaim(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}`, data);
   }
+  submitClaim(claimId: string) {
+    return this.http.put(`${this.baseUrl}/submit/${claimId}`, {});
+  }
+  getClaimById(claimId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${claimId}`);
+  }
 }
- 

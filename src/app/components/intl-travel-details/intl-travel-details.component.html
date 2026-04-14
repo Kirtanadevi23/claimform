@@ -1,0 +1,257 @@
+<div>
+     <img src="/assets/wind1.jpg" alt="Background" class="image clr-p-4">
+     <div class="page">
+          <h2 class="title">International Travel Claim</h2>
+          <!-- ===================== TRAVEL DETAILS ===================== -->
+          <div class="info-panel">
+               <form class="clr-form clr-form-horizontal">
+                    <div class="clr-row">
+                         <!-- Currency -->
+                         <div class="clr-col-4">
+                              <clr-select-container>
+                                   <label><strong>Select Currency</strong></label>
+                                   <select clrSelect [(ngModel)]="selectedCurrency" name="currency">
+                                        <option value="INR">INR</option>
+                                        <option value="EUR">EUR</option>
+                                        <option value="USD">USD</option>
+                                   </select>
+                              </clr-select-container>
+                         </div>
+                         <!-- START DATE -->
+                         <div class="clr-col-4">
+                              <clr-input-container>
+                                   <label><strong>Travel Start Date & Time</strong></label>
+                                   <input clrInput type="datetime-local" [(ngModel)]="travelStart" name="startDate"
+                                        [max]="today" (change)="validateStartDate()" required />
+                                   <!-- SHOW ERROR ONLY IF VALUE EXISTS -->
+                                   <div class="error-text" *ngIf="travelStart && startDateError">
+                                        Start date cannot be today or future.
+                                   </div>
+                              </clr-input-container>
+                         </div>
+                         <!-- END DATE -->
+                         <div class="clr-col-4">
+                              <clr-input-container>
+                                   <label><strong>Travel End Date & Time</strong></label>
+                                   <input clrInput type="datetime-local" [(ngModel)]="travelEnd" name="endDate"
+                                        [max]="today" [min]="travelStart" [disabled]="!travelStart"
+                                        (change)="validateEndDate()" required />
+                                   <!-- SHOW ERROR ONLY IF VALUE EXISTS -->
+                                   <div class="error-text" *ngIf="travelEnd && endDateError">
+                                        End date must be after start date and not future.
+                                   </div>
+                              </clr-input-container>
+                         </div>
+                         <!-- DAYS -->
+                         <div class="clr-col-4">
+                              <clr-input-container>
+                                   <label><strong>Number of Days</strong></label>
+                                   <input clrInput type="number" [value]="numberOfDays" readonly />
+                              </clr-input-container>
+                         </div>
+                    </div>
+               </form>
+          </div>
+          <!-- ===================== CARD SECTION ===================== -->
+          <div class="clr-row clr-mt-4">
+               <div class="clr-col-6">
+                    <div class="info-card" (click)="cardTouched = true">
+                         <div class="info-card-header">
+                              <h3>Card Loaded Amount Details</h3>
+                         </div>
+                         <div class="info-card-body">
+                              <div *ngIf="cardTouched && !canEnableBottomPanels()" class="warning-text">
+                                   Please fill Travel Details first!
+                              </div>
+                              <form #cardForm="ngForm">
+                                   <div class="clr-row">
+                                        <div class="clr-col-6">
+                                             <clr-input-container>
+                                                  <label>INR Rate</label>
+                                                  <input clrInput type="number" [(ngModel)]="card.inrRate"
+                                                       name="cardRate" [disabled]="!canEnableBottomPanels()" required />
+                                             </clr-input-container>
+                                        </div>
+                                        <div class="clr-col-6">
+                                             <clr-input-container>
+                                                  <label>Total Loaded</label>
+                                                  <input clrInput type="number" [(ngModel)]="card.totalLoaded"
+                                                       name="cardTotal" [disabled]="!canEnableBottomPanels()"
+                                                       required />
+                                             </clr-input-container>
+                                        </div>
+                                   </div>
+                                   <div class="clr-row">
+                                        <div class="clr-col-6">
+                                             <clr-input-container>
+                                                  <label>Loaded Date</label>
+                                                  <input clrInput type="date" [(ngModel)]="card.loadedDate"
+                                                       name="cardDate" [max]="todayDateOnly"
+                                                       [disabled]="!canEnableBottomPanels()" required />
+                                             </clr-input-container>
+                                        </div>
+                                        <div class="clr-col-6">
+                                             <clr-input-container>
+                                                  <label>Total INR</label>
+                                                  <input clrInput type="number"
+                                                       [value]="card.inrRate * card.totalLoaded" readonly />
+                                             </clr-input-container>
+                                        </div>
+                                   </div>
+                                   <button class="btn btn-primary" (click)="addCardEntry(cardForm)"
+                                        [disabled]="!canEnableBottomPanels()">
+                                        Add Card Entry
+                                   </button>
+                              </form>
+                         </div>
+                    </div>
+                    <!-- CARD TABLE -->
+                    <clr-datagrid class="clr-mt-2">
+                         <clr-dg-column>Currency</clr-dg-column>
+                         <clr-dg-column>INR Rate</clr-dg-column>
+                         <clr-dg-column>Total Loaded</clr-dg-column>
+                         <clr-dg-column>Loaded Date</clr-dg-column>
+                         <clr-dg-column>Total INR</clr-dg-column>
+                         <clr-dg-column>Actions</clr-dg-column>
+                         <clr-dg-row *ngFor="let entry of cardEntries; let i = index">
+                              <clr-dg-cell>{{ entry.currencyType }}</clr-dg-cell>
+                              <clr-dg-cell>{{ entry.inrRate }}</clr-dg-cell>
+                              <clr-dg-cell>{{ entry.totalLoaded }}</clr-dg-cell>
+                              <clr-dg-cell>{{ entry.loadedDate }}</clr-dg-cell>
+                              <clr-dg-cell>{{ entry.totalINR }}</clr-dg-cell>
+                              <clr-dg-cell>
+                                   <button class="btn btn-sm btn-outline" (click)="editCardEntry(i)">
+                                        <cds-icon shape="pencil"></cds-icon>
+                                   </button>
+                                   <button class="btn btn-sm btn-danger" (click)="deleteCardEntry(i)">
+                                        <cds-icon shape="trash"></cds-icon>
+                                   </button>
+                              </clr-dg-cell>
+                         </clr-dg-row>
+                    </clr-datagrid>
+               </div>
+               <!-- ===================== CASH SECTION ===================== -->
+               <div class="clr-col-6">
+                    <div class="info-card" (click)="cashTouched = true">
+                         <div class="info-card-header">
+                              <h3>Cash Amount Details</h3>
+                         </div>
+                         <div class="info-card-body">
+                              <div *ngIf="cashTouched && !canEnableBottomPanels()" class="warning-text">
+                                   Please fill Travel Details first!
+                              </div>
+                              <form #cashForm="ngForm">
+                                   <div class="clr-row">
+                                        <div class="clr-col-6">
+                                             <clr-input-container>
+                                                  <label>INR Rate</label>
+                                                  <input clrInput type="number" [(ngModel)]="cash.inrRate"
+                                                       name="cashRate" [disabled]="!canEnableBottomPanels()" required />
+                                             </clr-input-container>
+                                        </div>
+                                        <div class="clr-col-6">
+                                             <clr-input-container>
+                                                  <label>Total Loaded</label>
+                                                  <input clrInput type="number" [(ngModel)]="cash.totalLoaded"
+                                                       name="cashTotal" [disabled]="!canEnableBottomPanels()"
+                                                       required />
+                                             </clr-input-container>
+                                        </div>
+                                   </div>
+                                   <div class="clr-row">
+                                        <div class="clr-col-6">
+                                             <clr-input-container>
+                                                  <label>Loaded Date</label>
+                                                  <input clrInput type="date" [(ngModel)]="cash.loadedDate"
+                                                       name="cashDate" [max]="todayDateOnly"
+                                                       [disabled]="!canEnableBottomPanels()" required />
+                                             </clr-input-container>
+                                        </div>
+                                        <div class="clr-col-6">
+                                             <clr-input-container>
+                                                  <label>Total INR</label>
+                                                  <input clrInput type="number"
+                                                       [value]="cash.inrRate * cash.totalLoaded" readonly />
+                                             </clr-input-container>
+                                        </div>
+                                   </div>
+                                   <button class="btn btn-primary" (click)="addCashEntry(cashForm)"
+                                        [disabled]="!canEnableBottomPanels()">
+                                        Add Cash Entry
+                                   </button>
+                              </form>
+                         </div>
+                    </div>
+                    <!-- CASH TABLE -->
+                    <clr-datagrid class="clr-mt-2">
+                         <clr-dg-column>Currency</clr-dg-column>
+                         <clr-dg-column>INR Rate</clr-dg-column>
+                         <clr-dg-column>Total Loaded</clr-dg-column>
+                         <clr-dg-column>Loaded Date</clr-dg-column>
+                         <clr-dg-column>Total INR</clr-dg-column>
+                         <clr-dg-column>Actions</clr-dg-column>
+                         <clr-dg-row *ngFor="let entry of cashEntries; let i = index">
+                              <clr-dg-cell>{{ entry.currencyType }}</clr-dg-cell>
+                              <clr-dg-cell>{{ entry.inrRate }}</clr-dg-cell>
+                              <clr-dg-cell>{{ entry.totalLoaded }}</clr-dg-cell>
+                              <clr-dg-cell>{{ entry.loadedDate }}</clr-dg-cell>
+                              <clr-dg-cell>{{ entry.totalINR }}</clr-dg-cell>
+                              <clr-dg-cell>
+                                   <button class="btn btn-sm btn-outline" (click)="editCashEntry(i)">
+                                        <cds-icon shape="pencil"></cds-icon>
+                                   </button>
+                                   <button class="btn btn-sm btn-danger" (click)="deleteCashEntry(i)">
+                                        <cds-icon shape="trash"></cds-icon>
+                                   </button>
+                              </clr-dg-cell>
+                         </clr-dg-row>
+                    </clr-datagrid>
+               </div>
+          </div>
+          <!-- ===================== MODAL ===================== -->
+          <clr-modal [(clrModalOpen)]="showEditModal">
+               <h3 class="modal-title">Edit Entry</h3>
+               <div class="modal-body">
+                    <form #editForm="ngForm" (ngSubmit)="updateEntry(editForm)">
+                         <clr-input-container>
+                              <label>INR Rate</label>
+                              <input clrInput type="number" [(ngModel)]="editData.inrRate" name="inrRate" required />
+                         </clr-input-container>
+                         <clr-input-container>
+                              <label>Total Loaded</label>
+                              <input clrInput type="number" [(ngModel)]="editData.totalLoaded" name="totalLoaded"
+                                   required />
+                         </clr-input-container>
+                         <clr-input-container>
+                              <label>Loaded Date</label>
+                              <input clrInput type="date" [(ngModel)]="editData.loadedDate" [max]="todayDateOnly"
+                                   name="loadedDate" required />
+                         </clr-input-container>
+                         <div class="modal-actions">
+                              <button type="submit" class="btn btn-primary">Update</button>
+                              <button type="button" class="btn btn-outline" (click)="cancelEdit()">Cancel</button>
+                         </div>
+                    </form>
+               </div>
+          </clr-modal>
+          <!-- ===================== DELETE CONFIRMATION MODAL ===================== -->
+          <clr-modal [(clrModalOpen)]="showDeleteModal" [clrModalClosable]="false">
+               <h3 class="modal-title">Confirm Deletion</h3>
+               <div class="modal-body">
+                    <p>Do you want to delete it?</p>
+               </div>
+               <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" (click)="closeDeleteModal()">No</button>
+                    <button type="button" class="btn btn-danger" (click)="confirmDelete()">Yes</button>
+               </div>
+          </clr-modal>
+
+          <!-- ===================== NAVIGATION ===================== -->
+          <button class="btn btn-primary" (click)="goBack()">← Back</button>
+          <button class="btn btn-success"
+               [disabled]="!canEnableBottomPanels() || cardEntries.length === 0 || cashEntries.length === 0"
+               (click)="proceed()">
+               Proceed
+          </button>
+     </div>
+</div>
