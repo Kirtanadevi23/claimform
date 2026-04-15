@@ -6,6 +6,7 @@ import { AppHeaderComponent } from "../app-header/app-header.component";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClaimService } from '../../services/claim.service';
 import { EmployeeService } from '../../services/employee.service';
+import { ToastService } from '../../shared/toast.service';
 
 @Component({
   selector: 'app-home-page',
@@ -19,7 +20,8 @@ export class HomePageComponent implements OnInit {
     private router: Router,
     private claimService: ClaimService,
     private employeeService: EmployeeService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastService: ToastService
   ) { }
 
   claims: any[] = [];
@@ -128,6 +130,10 @@ export class HomePageComponent implements OnInit {
       next: (res: any) => {
         // Save claimId for expense page
         localStorage.setItem('claimId', res.claimId);
+        
+        // 🔥 TOAST: Claim Created
+        this.toastService.show('Claim created', 'success');
+
         // Refresh table
         if (employeeId) {
           this.claimService.getClaimsByEmployeeId(employeeId)
@@ -148,7 +154,9 @@ export class HomePageComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        alert(JSON.stringify(err.error));
+        // 🔥 TOAST: Error
+        this.toastService.show('Backend error', 'danger');
+        console.error(err);
       }
     });
   }

@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { ClarityModule } from '@clr/angular';
 import { Router } from '@angular/router';
 import { ExpenseService } from '../../services/expense.service';
+import { ToastService } from '../../shared/toast.service';
 @Component({
   selector: 'app-general-expense-entry',
   standalone: true,
@@ -15,7 +16,8 @@ export class GeneralExpenseEntryComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private expenseService: ExpenseService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) { }
   expenseForm!: FormGroup;
   expenses: any[] = [];
@@ -93,8 +95,13 @@ export class GeneralExpenseEntryComponent implements OnInit {
       this.expenseService.updateExpense(this.editExpenseId, payload)
         .subscribe({
           next: () => {
+            this.toastService.show('Expense updated', 'success');
             this.loadExpenses();
             this.closeModal();
+          },
+          error: (err) => {
+            this.toastService.show('API failure', 'danger');
+            console.error(err);
           }
         });
     }
@@ -103,8 +110,13 @@ export class GeneralExpenseEntryComponent implements OnInit {
       this.expenseService.addExpense(payload)
         .subscribe({
           next: () => {
+            this.toastService.show('Expense added', 'success');
             this.loadExpenses();
             this.closeModal();
+          },
+          error: (err) => {
+            this.toastService.show('API failure', 'danger');
+            console.error(err);
           }
         });
     }
@@ -133,12 +145,13 @@ export class GeneralExpenseEntryComponent implements OnInit {
     if (this.idToDelete) {
       this.expenseService.deleteExpense(this.idToDelete).subscribe({
         next: () => {
+          this.toastService.show('Expense deleted', 'success');
           this.loadExpenses();
           this.closeDeleteModal();
         },
         error: (err) => {
+          this.toastService.show('Backend error', 'danger');
           console.error(err);
-          alert("Error deleting expense");
           this.closeDeleteModal();
         }
       });

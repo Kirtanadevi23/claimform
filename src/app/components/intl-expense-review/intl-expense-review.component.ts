@@ -5,6 +5,7 @@ import { CardcashService } from '../../services/cardcash.service';
 import { ClarityModule } from '@clr/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ToastService } from '../../shared/toast.service';
 
 @Component({
   selector: 'app-intl-expense-review',
@@ -23,7 +24,8 @@ export class IntlExpenseReviewComponent implements OnInit {
     private expenseService: ExpenseService,
     private claimService: ClaimService,
     private cardCashService: CardcashService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -133,10 +135,14 @@ export class IntlExpenseReviewComponent implements OnInit {
     if (!this.claimId) return;
     this.claimService.submitClaim(this.claimId).subscribe({
       next: () => {
+        this.toastService.show('Claim submitted', 'success');
         localStorage.removeItem('claimId');
         this.router.navigate(['/home-page']);
       },
-      error: () => alert("Submit failed")
+      error: (err) => {
+        this.toastService.show('Backend error', 'danger');
+        console.error(err);
+      }
     });
   }
 

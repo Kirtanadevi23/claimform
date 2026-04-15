@@ -1,0 +1,8 @@
+<!-- Clarity Alert styled as Toast -->
+<clr-alert *ngIf="show" [clrAlertType]="type" [clrAlertClosable]="false" class="toast-alert">
+    <clr-alert-item>
+        <span class="alert-text">
+            {{ message }}
+        </span>
+    </clr-alert-item>
+</clr-alert>

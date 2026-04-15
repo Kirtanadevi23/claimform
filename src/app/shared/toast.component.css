@@ -1,0 +1,10 @@
+.toast-alert {
+    position: fixed;
+    /* stick to screen */
+    bottom: 20px;
+    /* bottom-right position */
+    right: 20px;
+    width: 300px;
+    z-index: 9999;
+    /* above everything */
+}

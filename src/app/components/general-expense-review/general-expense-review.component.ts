@@ -4,6 +4,7 @@ import { ClaimService } from '../../services/claim.service';     // ✅ API
 import { ClarityModule } from '@clr/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ToastService } from '../../shared/toast.service';
 @Component({
   selector: 'app-general-expense-review',
   standalone: true,
@@ -18,7 +19,8 @@ export class GeneralExpenseReviewComponent implements OnInit {
   constructor(
     private expenseService: ExpenseService,
     private claimService: ClaimService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) { }
   ngOnInit(): void {
     // ✅ STEP 1: Get claimId
@@ -109,11 +111,13 @@ export class GeneralExpenseReviewComponent implements OnInit {
     }
     this.claimService.submitClaim(claimId).subscribe({
       next: () => {
+        this.toastService.show('Claim submitted', 'success');
         console.log("Claim submitted successfully");
         this.router.navigate(['/home-page']);
       },
-      error: () => {
-        alert("Submit failed");
+      error: (err) => {
+        this.toastService.show('Backend error', 'danger');
+        console.error(err);
       }
     });
   }

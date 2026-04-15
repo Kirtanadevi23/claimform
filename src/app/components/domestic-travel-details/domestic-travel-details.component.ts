@@ -4,6 +4,7 @@ import { ClarityModule } from '@clr/angular';
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { CardcashService } from '../../services/cardcash.service';
+import { ToastService } from '../../shared/toast.service';
 import '@cds/core/icon/register.js';
 import { ClarityIcons, pencilIcon, trashIcon } from '@cds/core/icon';
 
@@ -25,7 +26,8 @@ export class DomesticTravelDetailsComponent implements OnInit {
   constructor(
     private router: Router,
     private location: Location,
-    private cardcashService: CardcashService
+    private cardcashService: CardcashService,
+    private toastService: ToastService
   ) { }
 
   // -------------------- TRAVEL DETAILS --------------------
@@ -158,6 +160,7 @@ export class DomesticTravelDetailsComponent implements OnInit {
       // API CALL → SAVE IN DB
       this.cardcashService.addCardCash(payload).subscribe({
         next: (res: any) => {
+          this.toastService.show('Card details added', 'success');
           const totalINR = res.inrRate * res.totalLoaded;
 
           // Store response with ID and explicitly inject loadedDate for UI list sync
@@ -168,7 +171,10 @@ export class DomesticTravelDetailsComponent implements OnInit {
           });
           form.resetForm();
         },
-        error: (err) => console.error(err)
+        error: (err) => {
+          this.toastService.show('API failure', 'danger');
+          console.error(err);
+        }
       });
     }
   }
@@ -191,6 +197,7 @@ export class DomesticTravelDetailsComponent implements OnInit {
 
       this.cardcashService.addCardCash(payload).subscribe({
         next: (res: any) => {
+          this.toastService.show('Cash details added', 'success');
           const totalINR = res.inrRate * res.totalLoaded;
 
           // Explicitly map loadedDate so it previews in the UI immediately
@@ -201,7 +208,10 @@ export class DomesticTravelDetailsComponent implements OnInit {
           });
           form.resetForm();
         },
-        error: (err) => console.error(err)
+        error: (err) => {
+          this.toastService.show('API failure', 'danger');
+          console.error(err);
+        }
       });
     }
   }
@@ -232,15 +242,29 @@ export class DomesticTravelDetailsComponent implements OnInit {
 
     if (this.deleteType === 'card') {
       const item = this.cardEntries[this.itemToDeleteIndex];
-      this.cardcashService.deleteCardCash(item.cardCashId).subscribe(() => {
-        this.cardEntries.splice(this.itemToDeleteIndex, 1);
-        this.closeDeleteModal();
+      this.cardcashService.deleteCardCash(item.cardCashId).subscribe({
+        next: () => {
+          this.toastService.show('Card details deleted', 'success');
+          this.cardEntries.splice(this.itemToDeleteIndex, 1);
+          this.closeDeleteModal();
+        },
+        error: (err) => {
+          this.toastService.show('Backend error', 'danger');
+          console.error(err);
+        }
       });
     } else if (this.deleteType === 'cash') {
       const item = this.cashEntries[this.itemToDeleteIndex];
-      this.cardcashService.deleteCardCash(item.cardCashId).subscribe(() => {
-        this.cashEntries.splice(this.itemToDeleteIndex, 1);
-        this.closeDeleteModal();
+      this.cardcashService.deleteCardCash(item.cardCashId).subscribe({
+        next: () => {
+          this.toastService.show('Cash details deleted', 'success');
+          this.cashEntries.splice(this.itemToDeleteIndex, 1);
+          this.closeDeleteModal();
+        },
+        error: (err) => {
+          this.toastService.show('Backend error', 'danger');
+          console.error(err);
+        }
       });
     }
   }
@@ -284,16 +308,18 @@ export class DomesticTravelDetailsComponent implements OnInit {
       this.cardcashService.updateCardCash(this.editData.cardCashId, payload)
         .subscribe({
           next: () => {
-            this.editData.totalINR = this.editData.inrRate * this.editData.totalLoaded;
-
             if (this.editType === 'card') {
+              this.toastService.show('Card details updated', 'success');
               this.cardEntries[this.editIndex] = { ...this.editData };
             } else {
+              this.toastService.show('Cash details updated', 'success');
               this.cashEntries[this.editIndex] = { ...this.editData };
             }
+            this.editData.totalINR = this.editData.inrRate * this.editData.totalLoaded;
             this.showEditModal = false;
           },
           error: (err) => {
+            this.toastService.show('API failure', 'danger');
             console.error(err);
             // In case backend rejects, just update locally so UI doesn't freeze
             this.editData.totalINR = this.editData.inrRate * this.editData.totalLoaded;
