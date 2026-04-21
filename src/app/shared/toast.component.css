@@ -1,10 +1,11 @@
 .toast-alert {
     position: fixed;
-    /* stick to screen */
-    bottom: 20px;
-    /* bottom-right position */
-    right: 20px;
-    width: 300px;
+    top: 95px; /* Safely below header padding/height */
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    min-width: 300px;
+    max-width: 90vw; /* Must fit within viewport */
     z-index: 9999;
-    /* above everything */
+    box-sizing: border-box;
 }

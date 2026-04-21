@@ -127,7 +127,7 @@ clr-input-container label::after {
   height: 100vh;
   filter: blur(9px);
   /* Adds blur */
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: -1;

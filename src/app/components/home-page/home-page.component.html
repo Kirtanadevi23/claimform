@@ -1,4 +1,3 @@
-<app-app-header></app-app-header>
 <div>
   <img src="/assets/wind1.jpg" alt="Background" class="image clr-p-4">
   <div class="container clr-p-4">
@@ -18,24 +17,44 @@
             <clr-dg-column>Date</clr-dg-column>
             <clr-dg-column>Purpose</clr-dg-column>
             <clr-dg-column>Amount</clr-dg-column>
+            <clr-dg-column>Settlement</clr-dg-column>
             <clr-dg-column>Status</clr-dg-column>
+            <clr-dg-column>Actions</clr-dg-column>
             <clr-dg-row *clrDgItems="let claim of claims">
               <clr-dg-cell>{{ claim.type }}</clr-dg-cell>
               <clr-dg-cell>{{ claim.date | date: 'MM/dd/yyyy' }}</clr-dg-cell>
               <clr-dg-cell>{{ claim.purpose }}</clr-dg-cell>
               <clr-dg-cell>₹{{ claim.totalAmount }}</clr-dg-cell>
               <clr-dg-cell>
+                <span [style.color]="getSettlementInfo(claim.settlement).color">
+                  ₹{{ getSettlementInfo(claim.settlement).abs }}
+                  <small>({{ getSettlementInfo(claim.settlement).text }})</small>
+                </span>
+              </clr-dg-cell>
+              <clr-dg-cell>
                 <span [ngClass]="getStatusClass(claim.status)" class="status-badge">
                   {{ claim.status }}
                 </span>
+              </clr-dg-cell>
+              <clr-dg-cell>
+                <button class="btn btn-link btn-sm btn-icon" (click)="viewClaim(claim)" title="View Review">
+                  <cds-icon shape="eye" status="primary"></cds-icon>
+                </button>
+                <button class="btn btn-link btn-sm btn-icon" (click)="editClaim(claim)" title="Edit Claim">
+                  <cds-icon shape="pencil" status="primary"></cds-icon>
+                </button>
+                <button class="btn btn-link btn-sm btn-icon" (click)="openWithdrawModal(claim)"
+                  [disabled]="claim.status === 'Withdrawn'" title="Withdraw Claim">
+                  <cds-icon shape="trash" [attr.status]="claim.status === 'Withdrawn' ? 'muted' : 'danger'"></cds-icon>
+                </button>
               </clr-dg-cell>
             </clr-dg-row>
             <clr-dg-placeholder *ngIf="claims.length === 0">
               No recent claims!
             </clr-dg-placeholder>
             <clr-dg-footer>
-              <clr-dg-pagination #pagination [clrDgPageSize]="10">
-                <clr-dg-page-size [clrPageSizeOptions]="[10, 20, 50, 100]">
+              <clr-dg-pagination #pagination [clrDgPageSize]="5">
+                <clr-dg-page-size [clrPageSizeOptions]="[5, 10, 20, 50, 100]">
                   Claims per page
                 </clr-dg-page-size>
                 {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }}
@@ -75,12 +94,12 @@
           <!-- Username -->
           <clr-input-container>
             <label>Expense Statement of Mr/Ms</label>
-            <input clrInput type="text" formControlName="username" />
+            <input clrInput type="text" formControlName="username" readonly />
           </clr-input-container>
           <!-- Employee Code -->
           <clr-input-container>
             <label>Employee Code</label>
-            <input clrInput type="text" formControlName="employeeCode" />
+            <input clrInput type="text" formControlName="employeeCode" readonly />
           </clr-input-container>
           <!-- Purpose -->
           <clr-input-container>
@@ -90,17 +109,17 @@
           <!-- Company -->
           <clr-input-container>
             <label>Company / Plant</label>
-            <input clrInput type="text" formControlName="companyPlant" />
+            <input clrInput type="text" formControlName="companyPlant" readonly />
           </clr-input-container>
           <!-- Cost Center -->
           <clr-input-container>
             <label>Cost Center</label>
-            <input clrInput type="text" formControlName="costCenter" />
+            <input clrInput type="text" formControlName="costCenter" readonly />
           </clr-input-container>
           <!-- Vendor Code -->
           <clr-input-container>
             <label>Vendor Code</label>
-            <input clrInput type="text" formControlName="vendorCode" />
+            <input clrInput type="text" formControlName="vendorCode" readonly />
           </clr-input-container>
           <!-- Buttons -->
           <div class="modal-footer">
@@ -119,6 +138,18 @@
             <span class="alert-text">Form submitted successfully!</span>
           </clr-alert-item>
         </clr-alert>
+      </div>
+    </clr-modal>
+
+    <!-- Withdraw Confirmation Modal -->
+    <clr-modal [(clrModalOpen)]="withdrawModalOpen">
+      <h3 class="modal-title">Confirm</h3>
+      <div class="modal-body">
+        <p>Do you want to Withdraw the claim?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="withdrawModalOpen = false">No</button>
+        <button type="button" class="btn btn-danger" (click)="confirmWithdraw()">Yes</button>
       </div>
     </clr-modal>
   </div>

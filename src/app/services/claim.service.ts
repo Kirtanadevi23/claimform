@@ -18,10 +18,13 @@ export class ClaimService {
   createClaim(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}`, data);
   }
-  submitClaim(claimId: string) {
-    return this.http.put(`${this.baseUrl}/submit/${claimId}`, {});
+  submitClaim(claimId: string, currentUser?: string) {
+    return this.http.put(`${this.baseUrl}/submit/${claimId}?currentUser=${currentUser || ''}`, {});
   }
   getClaimById(claimId: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/${claimId}`);
+  }
+  withdrawClaim(claimId: string, currentUser?: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/withdraw/${claimId}?currentUser=${currentUser || ''}`, {});
   }
 }

@@ -10,10 +10,13 @@ import { CommonModule } from '@angular/common';
  imports: [ClarityModule, CommonModule]
 })
 export class AppHeaderComponent implements OnInit {
- username: string = '';
  constructor(private router: Router) {}
+
+ get username(): string {
+   return localStorage.getItem('username') || 'User';
+ }
+
  ngOnInit() {
-   this.username = localStorage.getItem('username') || 'User';
  }
  logout() {
    localStorage.clear(); // Clear everything

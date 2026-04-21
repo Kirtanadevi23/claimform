@@ -21,9 +21,9 @@
 }
 
 .username {
-  color: #d4e8f2;
+  color: white;
   font-weight: 600;
-  font-size: large;
+  font-size: 1.1rem;
 }
 
 .logout-btn {

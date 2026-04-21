@@ -14,12 +14,12 @@ export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', component: LoginPageComponent },
     { path: 'home-page', component: HomePageComponent },
-    { path: 'general-expense-entry', component: GeneralExpenseEntryComponent },
-    { path: 'general-expense-review', component: GeneralExpenseReviewComponent },
-    { path: 'intl-travel-details', component: IntlTravelDetailsComponent },
-    { path: 'intl-expense-entry', component: IntlExpenseEntryComponent },
-    { path: 'intl-expense-review', component: IntlExpenseReviewComponent },
-    { path: 'domestic-travel-details', component: DomesticTravelDetailsComponent },
-    { path: 'domestic-expense-entry', component: DomesticExpenseEntryComponent },
-    { path: 'domestic-expense-review', component: DomesticExpenseReviewComponent }
+    { path: 'general-expense-entry/:claimId', component: GeneralExpenseEntryComponent },
+    { path: 'general-expense-review/:claimId', component: GeneralExpenseReviewComponent },
+    { path: 'intl-travel-details/:claimId', component: IntlTravelDetailsComponent },
+    { path: 'intl-expense-entry/:claimId', component: IntlExpenseEntryComponent },
+    { path: 'intl-expense-review/:claimId', component: IntlExpenseReviewComponent },
+    { path: 'domestic-travel-details/:claimId', component: DomesticTravelDetailsComponent },
+    { path: 'domestic-expense-entry/:claimId', component: DomesticExpenseEntryComponent },
+    { path: 'domestic-expense-review/:claimId', component: DomesticExpenseReviewComponent }
 ];

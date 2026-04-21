@@ -54,26 +54,30 @@
     </div>
 
     <!-- Expense Form Modal -->
-    <button class="btn btn-primary" (click)="openModal()"> Add Expense</button>
+    <div class="action-bar" *ngIf="!tempDataService.isViewMode">
+      <button class="btn btn-primary" (click)="openModal()"> Add Expense</button>
+    </div>
 
-    <clr-modal [(clrModalOpen)]="showModal" [clrModalSize]="'md'">
+
+    <clr-modal [(clrModalOpen)]="showModal" (clrModalOpenChange)="onModalOpenChange($event)" [clrModalSize]="'md'">
       <h3 class="modal-title">{{ isEditMode ? 'Edit Expense' : 'Add Expense' }}</h3>
       <div class="modal-body">
         <form [formGroup]="expenseForm" (ngSubmit)="addExpense()" class="clr-form clr-form-horizontal">
           <clr-input-container class="mandatory">
             <label>Date</label>
             <input clrInput type="date" formControlName="date" [max]="today" required />
+            <clr-control-error *ngIf="expenseForm.get('date')?.value > today">Date cannot be in the
+              future</clr-control-error>
           </clr-input-container>
 
           <clr-input-container class="mandatory">
             <label>Supporting No</label>
-            <input clrInput type="text" formControlName="supportingNo" placeholder="e.g., 123456" required />
+            <input clrInput type="text" formControlName="supportingNo" required />
           </clr-input-container>
 
           <clr-select-container class="mandatory">
             <label>Particulars</label>
             <select clrSelect formControlName="particulars" required>
-              <option value="" disabled selected>Select</option>
               <option>Hotel</option>
               <option>Transport</option>
               <option>Food</option>
@@ -85,31 +89,47 @@
             </select>
           </clr-select-container>
 
-          <clr-select-container class="mandatory">
+          <clr-input-container>
             <label>Payment Mode</label>
-            <select clrSelect formControlName="paymentMode" required>
-              <option value="" disabled selected>Select payment mode</option>
-              <option value="Cash">Cash</option>
-              <option value="Card">Card</option>
-            </select>
-          </clr-select-container>
+            <input clrInput type="text" formControlName="paymentMode" readonly />
+          </clr-input-container>
 
           <clr-input-container class="mandatory">
-            <label>Amount</label>
+            <label>Amount (INR)</label>
             <input clrInput type="number" formControlName="amount" placeholder="0.00" min="0.01" required />
             <clr-control-error>Enter right amount</clr-control-error>
           </clr-input-container>
 
           <clr-textarea-container [ngClass]="{'mandatory': expenseForm.get('particulars')?.value === 'Others'}">
             <label>Remarks</label>
-            <textarea clrTextarea formControlName="remarks" placeholder="e.g., Test entry" rows="2"
+            <textarea clrTextarea formControlName="remarks" placeholder="e.g., Type your message" rows="2"
               [required]="expenseForm.get('particulars')?.value === 'Others'">
           </textarea>
           </clr-textarea-container>
 
+          <div class="clr-form-control clr-row screenshot-upload-row mandatory">
+            <label class="clr-control-label clr-col-12 clr-col-md-3 screenshot-label">Upload Screenshot</label>
+            <div class="clr-control-container clr-col-12 clr-col-md-9 screenshot-controls">
+              <input type="file" (change)="onFileSelected($event)" accept="image/png, image/jpeg" class="hidden-input"
+                #fileInput required />
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="fileInput.click()">Choose
+                File</button>
+
+              <div *ngIf="selectedFileBase64" class="screenshot-preview-container">
+                <img [src]="'data:image/jpeg;base64,' + selectedFileBase64" alt="Preview" class="preview-img-small">
+                <span class="clr-subtext">{{ selectedFileName }}</span>
+                <button type="button" class="btn btn-link btn-sm btn-icon btn-danger" (click)="clearFile(fileInput)"
+                  title="Remove Screenshot">
+                  <cds-icon shape="trash" status="danger"></cds-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div class="modal-actions">
             <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="!expenseForm.valid">
+            <button type="submit" class="btn btn-primary"
+              [disabled]="!expenseForm.valid || expenseForm.get('date')?.value > today">
               {{ isEditMode ? 'Update' : 'Add' }}
             </button>
           </div>
@@ -118,13 +138,14 @@
     </clr-modal>
 
 
-    <clr-datagrid>
+    <clr-datagrid class="scroll-container clr-mt-2">
       <clr-dg-column>Date</clr-dg-column>
       <clr-dg-column>Supporting No</clr-dg-column>
       <clr-dg-column>Particulars</clr-dg-column>
       <clr-dg-column>Payment Mode</clr-dg-column>
       <clr-dg-column>Amount</clr-dg-column>
       <clr-dg-column>Remarks</clr-dg-column>
+      <clr-dg-column>Screenshot</clr-dg-column>
       <clr-dg-column>Actions</clr-dg-column>
 
       <clr-dg-row *ngFor="let e of expenses">
@@ -132,20 +153,38 @@
         <clr-dg-cell>{{ e.supportingNo }}</clr-dg-cell>
         <clr-dg-cell>{{ e.particulars }}</clr-dg-cell>
         <clr-dg-cell>{{ e.paymentMode }}</clr-dg-cell>
-        <clr-dg-cell>₹{{ e.amount }}</clr-dg-cell>
-        <clr-dg-cell>{{ e.remarks }}</clr-dg-cell>
+        <clr-dg-cell>{{ e.amount | currency:'INR':'symbol' }}</clr-dg-cell>
+        <clr-dg-cell>{{ e.remarks || '-' }}</clr-dg-cell>
         <clr-dg-cell>
+          <div class="screenshot-table-cell">
+            <span class="screenshot-name-text">{{ e.screenshotName || e.ScreenshotName || '-' }}</span>
+            <button *ngIf="e.screenshotBase64" class="btn btn-link btn-sm btn-icon"
+              (click)="viewImage(e.screenshotBase64)" title="View Screenshot">
+              <cds-icon shape="eye" size="sm"></cds-icon>
+            </button>
+          </div>
+        </clr-dg-cell>
+        <clr-dg-cell *ngIf="!tempDataService.isViewMode">
           <button class="btn btn-sm btn-outline" (click)="editExpense(e)">
             <cds-icon shape="pencil"></cds-icon>
           </button>
-          <button class="btn btn-sm btn-danger" (click)="deleteExpense(e.expenseId)">
+          <button class="btn btn-sm btn-danger" (click)="deleteExpense(e.expenseId || e.tempId)">
             <cds-icon shape="trash"></cds-icon>
           </button>
         </clr-dg-cell>
+        <clr-dg-cell *ngIf="tempDataService.isViewMode">
+          -
+        </clr-dg-cell>
       </clr-dg-row>
 
+      <clr-dg-placeholder *ngIf="expenses.length === 0">No expenses added yet</clr-dg-placeholder>
 
-      <clr-dg-placeholder *ngIf="expenses.length === 0">No expense added yet!</clr-dg-placeholder>
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="10" [clrDgTotalItems]="expenses.length">
+          <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Expenses per page</clr-dg-page-size>
+          {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{expenses.length}} Expenses
+        </clr-dg-pagination>
+      </clr-dg-footer>
     </clr-datagrid>
 
     <clr-modal [(clrModalOpen)]="showDeleteModal" [clrModalClosable]="false">
@@ -160,13 +199,29 @@
     </clr-modal>
 
     <div class="bottom-btns">
-      <div class="backbtn">
-        <button class="btn btn-primary" (click)="goBack()">
-          ← Back
-        </button>
-      </div>
-      <button class="btn btn-outline" (click)="cancel()">Cancel</button>
+      <!-- Logic for View vs Edit -->
+      <button *ngIf="!tempDataService.isViewMode" class="btn btn-outline backbtn" (click)="goBack()">← Back</button>
+
       <button class="btn btn-primary" [disabled]="expenses.length < 1" (click)="review()">Review</button>
+
+      <!-- Go to Home button (Always visible in Edit Mode) -->
+      <button *ngIf="tempDataService.isEditMode" class="btn btn-primary" [disabled]="expenses.length > 0"
+        (click)="cancelEdit()">Go to Home</button>
+
+      <!-- Close button for View Mode -->
+      <button *ngIf="tempDataService.isViewMode" class="btn btn-primary" (click)="onClose()">Close</button>
     </div>
+
+    <!-- Image Preview Modal -->
+    <clr-modal [(clrModalOpen)]="showImagePreview" [clrModalSize]="'lg'">
+      <h3 class="modal-title">Screenshot Preview</h3>
+      <div class="modal-body modal-body-centered">
+        <img *ngIf="previewImageBase64" [src]="'data:image/jpeg;base64,' + previewImageBase64" alt="Large Preview"
+          class="preview-img-large">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="closeImagePreview()">Close</button>
+      </div>
+    </clr-modal>
   </div>
 </div>

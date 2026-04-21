@@ -81,11 +81,8 @@ clr-input-container label {
 }
 
 .scroll-container {
-  max-height: 200px;       /* Adjust height as needed */
-  overflow-y: auto;        /* Enables vertical scroll */
-  /* border: 1px solid #ccc;  Optional: adds border */
+  height: 230px;           /* Fixed height for ~two entries and prevents shrinking */
   border-radius: 4px;      /* Optional: rounded corners */
-  padding: 0.5rem;         /* Optional: spacing inside */
 }
 
 /* Background Image */
@@ -105,12 +102,6 @@ clr-input-container label {
 }
 /* Responsive Layout for Cards */
 @media (min-width: 768px) {
-  .info-panel {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
   .info-card {
     flex: 1 1 calc(50% - 1rem); /* Two cards side by side */
   }
@@ -165,4 +156,20 @@ padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Plain number display for Number of Days */
+.days-display {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1b1b1b;
+  padding: 4px 0;
+}
+
+/* Navigation row - Back + Proceed side by side */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
 }

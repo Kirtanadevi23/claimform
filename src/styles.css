@@ -1,0 +1,20 @@
+.hidden-input {
+    display: none !important;
+}
+
+.dg-action-cell {
+    display: flex !important;
+    gap: 10px;
+}
+
+.modal-body-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mandatory label::after {
+    content: " *";
+    color: red;
+    font-weight: bold;
+}

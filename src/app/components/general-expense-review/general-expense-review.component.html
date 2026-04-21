@@ -56,13 +56,15 @@
   </div>
 
   <!-- EXPENSE TABLE WITH TOTALS -->
-  <clr-datagrid *ngIf="expenses.length > 0">
+  <clr-datagrid>
     <clr-dg-column>Date</clr-dg-column>
     <clr-dg-column>Supporting No</clr-dg-column>
     <clr-dg-column>Particular</clr-dg-column>
     <clr-dg-column>Payment Mode</clr-dg-column>
-    <clr-dg-column>Amount</clr-dg-column>
+    <clr-dg-column>Amount (INR)</clr-dg-column>
     <clr-dg-column>Remarks</clr-dg-column>
+
+    <clr-dg-placeholder>No expenses added yet</clr-dg-placeholder>
 
     <clr-dg-row *ngFor="let e of expenses">
       <clr-dg-cell>{{ formatDate(e.date) }}</clr-dg-cell>
@@ -70,7 +72,7 @@
       <clr-dg-cell>{{ e.particulars }}</clr-dg-cell>
       <clr-dg-cell>{{ e.paymentMode }}</clr-dg-cell>
       <clr-dg-cell>₹{{ e.amount }}</clr-dg-cell>
-      <clr-dg-cell>{{ e.remarks }}</clr-dg-cell>
+      <clr-dg-cell>{{ e.remarks || '-' }}</clr-dg-cell>
     </clr-dg-row>
 
     <!-- Payment Mode Totals -->
@@ -92,14 +94,61 @@
       <clr-dg-cell><strong>Grand Total</strong></clr-dg-cell>
       <clr-dg-cell><strong>₹{{ totalAmount }}</strong></clr-dg-cell>
     </clr-dg-row>
-
-    <clr-dg-placeholder *ngIf="expenses.length === 0">No expenses added yet!</clr-dg-placeholder>
   </clr-datagrid>
+
+  <!-- SUMMARY BOX -->
+  <div class="clr-row clr-justify-content-end" *ngIf="expenses.length > 0">
+    <div class="clr-col-12 clr-col-md-4">
+      <div class="summary-box">
+        <table class="table table-compact">
+          <tbody>
+            <tr>
+              <td>Expense Paid by Employee (Cash)</td>
+              <td>₹{{ employeePaid }}</td>
+            </tr>
+            <tr>
+              <td>Expense Paid by Company (Card/Itilite)</td>
+              <td>₹{{ companyPaid }}</td>
+            </tr>
+            <tr>
+              <td>Total Expenses Bill</td>
+              <td>₹{{ totalAmount }}</td>
+            </tr>
+            <tr class="highlight">
+              <td colspan="2" [ngStyle]="{ color: settlement.color }">
+                {{ settlement.msg }}: ₹{{ settlement.value }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 
   <!-- BUTTONS -->
   <div class="bottom-btns">
-    <button class="btn btn-outline" (click)="printPage()">Print</button>
-    <button class="btn btn-primary" (click)="submitToMain()">Submit</button>
-    <button class="btn btn-outline" (click)="cancelPage()">Cancel</button>
+    <!-- View Mode Actions -->
+    <button *ngIf="tempDataService.isViewMode" class="btn btn-outline" (click)="printPage()">Print</button>
+    <button *ngIf="tempDataService.isViewMode" class="btn btn-primary" (click)="onClose()">Close</button>
+
+    <!-- Edit Mode Actions -->
+    <button *ngIf="!tempDataService.isViewMode" class="btn btn-outline" (click)="printPage()">Print</button>
+    <button *ngIf="!tempDataService.isViewMode" class="btn btn-primary" (click)="goBack()">Back</button>
+    <button *ngIf="!tempDataService.isViewMode" class="btn btn-primary" (click)="submitToMain()">Submit</button>
+    <button *ngIf="!tempDataService.isViewMode" class="btn btn-danger" (click)="cancelPage()">
+      {{ tempDataService.isEditMode ? 'Cancel Edit' : 'Cancel Claim' }}
+    </button>
   </div>
+  <!-- CANCEL CONFIRMATION MODAL -->
+  <clr-modal [(clrModalOpen)]="showCancelModal" [clrModalClosable]="false">
+    <h3 class="modal-title">Confirm Cancellation</h3>
+    <div class="modal-body">
+      <p>All changes will be lost. Continue?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline" (click)="showCancelModal = false">No</button>
+      <button type="button" class="btn btn-danger" (click)="confirmCancel()">Yes</button>
+    </div>
+  </clr-modal>
 </div>

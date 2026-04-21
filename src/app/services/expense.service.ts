@@ -26,8 +26,8 @@ export class ExpenseService {
     return this.http.put(`${this.apiUrl}/${expenseId}`, data);
   }
   // DELETE
-  deleteExpense(expenseId: string) {
-    return this.http.delete(`${this.apiUrl}/${expenseId}`);
+  deleteExpense(expenseId: string, currentUser?: string) {
+    return this.http.delete(`${this.apiUrl}/${expenseId}?currentUser=${currentUser || ''}`);
   }
 }
 
